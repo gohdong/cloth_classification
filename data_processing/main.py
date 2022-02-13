@@ -408,7 +408,7 @@ kaggle_category_translate_dict = {
 f = open('dataset.csv','w')
 
 #H&M 데이터
-with open('./archive/articles.csv', newline='') as csvfile:
+with open('./hnm_data/articles.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile)
     key_index = {}
     for i,row in enumerate(spamreader):
@@ -434,7 +434,7 @@ with open('./archive/articles.csv', newline='') as csvfile:
         
 
 
-with open('./styles.csv', newline='') as csvfile:
+with open('./kaggle_data_label.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile)
     key_index = {}
     for i,row in enumerate(spamreader):
