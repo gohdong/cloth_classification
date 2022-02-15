@@ -1,0 +1,40 @@
+body {
+  height: 100vh;
+  width: 100vw;
+}
+p {
+  margin: 0;
+}
+
+
+#left-sidebar{
+  border-right: 1px solid #e6e6e6;
+  height: calc(100vh - 90px);
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+}
+
+#left-sidebar p{
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  color: #808080;
+}
+
+#left-sidebar-buttons{
+  height: 30px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  justify-content: space-between;
+  border-top: 1px solid #e6e6e6;
+  display: flex;
+}
+
+#bottom-status{
+  height: 30px;
+  width: 100%;
+  border-top: 1px solid #e6e6e6;
+}
