@@ -55,13 +55,14 @@ const upload =  multer({
   }),
 });
 app.post('/upload', upload.single('img'), async(req, res) => {  //유저가 태그를 수정하고 업로드하면 다시 저장
-  // console.log(req.file);
-  // console.log(req.body['tags'])
+  console.log(req.file);
+  let file = req.file;
+  console.log(req.body['tags'])
   con.connect();
 
-  // var query = `INSERT INTO upload(img_path,user_id,tags,uploaded_at) VALUES ('${req.file.path}',1,'${req.body['tags']}',CURRENT_TIMESTAMP)`
-  // console.log(query);
-  // con.query(query)
+  var query = `INSERT INTO upload(img_path,user_id,tags,uploaded_at) VALUES ('${file?.path}',1,'${req.body['tags']}',CURRENT_TIMESTAMP)`
+  console.log(query);
+  con.query(query)
 
   con.end();
 
