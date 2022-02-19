@@ -1,8 +1,11 @@
 import React from "react";
+// import {atom} from "recoil";
 import "./App.css";
 import AppBar from "./appbar/AppBar";
 import LeftSidebar from "./left_sidebar/LeftSidebar";
 import RightSideBar from "./right_sidebar/RightSideBar";
+import MyDropzone from "./main/test";
+import BottomStatusBar from "./bottom_status_bar/BottomStatusBar";
 
 function App() {
 	return (
@@ -14,9 +17,7 @@ function App() {
 						<div className="flex-wrapper">
 							<LeftSidebar/>
 							<div id="main-contents">
-								<div id="placeholder">
-									<div className="" />
-								</div>
+								<MyDropzone/>
 							</div>
 						</div>
 					</div>
@@ -24,9 +25,7 @@ function App() {
 						<RightSideBar/>
 					</div>
 				</div>
-				<div id="bottom-status">
-					status
-				</div>
+				<BottomStatusBar/>
 			</div>
 		</>
 	);
