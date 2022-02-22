@@ -43,7 +43,7 @@ export default function MyDropzone() {
 	const onDrop = useCallback(acceptedFiles => {
 		onDropHandler(images, setImages, setCurrentItemID, acceptedFiles);
 	}, []);
-	const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
+	const {getRootProps, getInputProps, isDragActive} = useDropzone({accept: "image/jpeg,image/png,image/jpg", onDrop});
 
 
 	return (
