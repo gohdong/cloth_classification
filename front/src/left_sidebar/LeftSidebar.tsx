@@ -8,13 +8,17 @@ export default function LeftSidebar() {
 
 	return (
 		<div id="left-sidebar">
-			{Array.from(imagesList).map((value, index) =>
-				<>
-					<p key={value[1].id}>aa</p>
-				</>,
-			)}
 			{
-				imageLength === 0 && <p>drag or add items</p>
+				imageLength === 0 ?
+					<p>drag or add items</p> :
+					<div id="left-sidebar-item-wrapper">
+						{Array.from(imagesList).map((value, index) =>
+							<div key={value[1].id} className="left-sidebar-item">
+								<img src={URL.createObjectURL(value[1].file)} alt={`uploaded_image_${index}`}/>
+								<p className="item-title">{value[1].file.name}</p>
+							</div>,
+						)}
+					</div>
 			}
 			<div id="left-sidebar-buttons">
 				<p>+</p>

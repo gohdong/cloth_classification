@@ -25,8 +25,8 @@ function App() {
 						<RightSideBar/>
 					</div>
 				</div>
-				<BottomStatusBar/>
 			</div>
+			<BottomStatusBar/>
 		</>
 	);
 }

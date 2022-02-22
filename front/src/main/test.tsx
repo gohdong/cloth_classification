@@ -5,36 +5,37 @@ import {imageState, Image} from "../recoil/imageState";
 
 const hash = require("object-hash");
 
+export function onDropHandler(images: Map<string, Image>,
+	setImages: Function, acceptedFiles: File[]) {
+	for (const item of acceptedFiles) {
+		const fileID = hash(item);
+
+
+		if (!images.has(fileID)) {
+			const tempMap = new Map<string, Image>();
+
+			tempMap.set(fileID, {
+				id: fileID,
+				file: item,
+				edited: false,
+				usersTag: [],
+				modelResultTag: [],
+			});
+
+			setImages((prev: Map<string, Image>) => new Map<string, Image>(
+				[...prev, ...tempMap],
+			),
+			);
+		}
+	}
+}
 
 export default function MyDropzone() {
 	const [images, setImages] = useRecoilState(imageState);
 
-	function onDropHandler(acceptedFiles: File[]) {
-		for (const item of acceptedFiles) {
-			const fileID = hash(item);
-
-
-			if (!images.has(fileID)) {
-				const tempMap = new Map<string, Image>();
-
-				tempMap.set(fileID, {
-					id: fileID,
-					file: item,
-					edited: false,
-					usersTag: [],
-					modelResultTag: [],
-				});
-
-				setImages(prev => new Map<string, Image>(
-					[...prev, ...tempMap],
-				),
-				);
-			}
-		}
-	}
 
 	const onDrop = useCallback(acceptedFiles => {
-		onDropHandler(acceptedFiles);
+		onDropHandler(images, setImages, acceptedFiles);
 	}, []);
 	const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
 
