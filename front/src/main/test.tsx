@@ -1,14 +1,18 @@
 import React, {useCallback} from "react";
 import {useDropzone} from "react-dropzone";
-import {useRecoilState} from "recoil";
-import {imageState, Image} from "../recoil/imageState";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {imageState, Image, imagesSizeState, selectedItemID} from "../recoil/imageState";
 
 const hash = require("object-hash");
 
 export function onDropHandler(images: Map<string, Image>,
-	setImages: Function, acceptedFiles: File[]) {
-	for (const item of acceptedFiles) {
+	setImages: Function, setID : Function, acceptedFiles: File[]) {
+	for (const [index, item] of acceptedFiles.entries()) {
 		const fileID = hash(item);
+
+		if (index === 0) {
+			setID(fileID);
+		}
 
 
 		if (!images.has(fileID)) {
@@ -32,25 +36,40 @@ export function onDropHandler(images: Map<string, Image>,
 
 export default function MyDropzone() {
 	const [images, setImages] = useRecoilState(imageState);
+	const imagesCount = useRecoilValue(imagesSizeState);
+	const [currentItemID, setCurrentItemID] = useRecoilState(selectedItemID);
 
 
 	const onDrop = useCallback(acceptedFiles => {
-		onDropHandler(images, setImages, acceptedFiles);
+		onDropHandler(images, setImages, setCurrentItemID, acceptedFiles);
 	}, []);
 	const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
 
 
 	return (
 		<>
-			<div id="placeholder" {...getRootProps()}>
-				<input {...getInputProps()} />
-				<div/>
-			</div>
 			{
-				isDragActive ?
-					<p>Drop the files here ...</p> :
-					<p>Drag 'n' drop some files here, or click to select files</p>
+				imagesCount > 0 ?
+					<p>
+						<img src={
+							// @ts-ignore
+							URL.createObjectURL(images.get(currentItemID).file)
+						} alt="" width="400px" />
+					</p> :
+					<>
+						<div id="placeholder" {...getRootProps()}>
+							<input {...getInputProps()} />
+							<div/>
+						</div>
+						{
+							isDragActive ?
+								<p>Drop the files here ...</p> :
+								<p>Drag 'n' drop some files here, or click to select files</p>
+						}
+					</>
 			}
 		</>
+
+
 	);
 }

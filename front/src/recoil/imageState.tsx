@@ -15,12 +15,17 @@ export const imageState = atom<Map<string, Image>>({
 	default: new Map(),
 });
 
-export const imagesSizeState = selector({
+export const imagesSizeState = selector<number>({
 	key: "imagesCount", // unique ID (with respect to other atoms/selectors)
 	get: ({get}) => {
 		const text = get(imageState);
 
 		return text.size;
 	},
+});
+
+export const selectedItemID = atom({
+	key: "selectedItemID",
+	default: "",
 });
 
