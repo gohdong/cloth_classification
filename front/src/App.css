@@ -9,13 +9,15 @@ p {
 
 #left-sidebar{
   border-right: 1px solid #e6e6e6;
-  height: calc(100vh - 90px);
-  display: flex;
+  height: calc(100vh - 91px);
+  display: grid;
+  grid-template-rows: 1fr 30px;
   flex-direction: column;
-  width: 240px;
+  width: 230px;
+  min-width: 230px;
 }
 
-#left-sidebar p{
+#left-sidebar > p{
   display: flex;
   height: 100%;
   flex-direction: column;
@@ -26,15 +28,102 @@ p {
 
 #left-sidebar-buttons{
   height: 30px;
+  min-height: 30px;
   padding: 0 10px;
   box-sizing: border-box;
   justify-content: space-between;
   border-top: 1px solid #e6e6e6;
   display: flex;
 }
+#left-sidebar-buttons > p {
+  line-height: 30px;
+  cursor: pointer;
+}
+
+#main-contents{
+  width: 100%;
+  flex-grow: 1;
+}
+
+#right-sidebar{
+  width: 300px;
+  height: 100%;
+  border-left: 1px solid #e6e6e6;
+  /*display: none;*/
+}
+
+#static-contents{
+  flex-grow: 1;
+}
 
 #bottom-status{
   height: 30px;
+  min-height: 30px;
+  line-height: 30px;
+  color: #808080;
   width: 100%;
+  box-sizing: border-box;
   border-top: 1px solid #e6e6e6;
+  padding-left: 10px;
+}
+.flex-wrapper {
+  display: flex;
+}
+#contents-wrapper{
+  display: flex;
+}
+
+#main-contents{
+  min-width: 500px;
+  text-align: center;
+}
+
+/*#image-zone{*/
+/*  */
+/*}*/
+
+#placeholder{
+  width: 450px;
+  height: 300px;
+  margin: 100px auto 0;
+  border-radius: 30px;
+  border: 2px dashed #e6e6e6;
+  display: flex;
+}
+
+#placeholder > div{
+  margin: auto;
+  width: 100px;
+  height: 80px;
+  border-radius: 10px;
+  background-repeat: no-repeat;
+  background-image: url("../images/placeholder.png");
+  background-size: cover ;
+}
+
+.left-sidebar-item{
+  height: 50px;
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  padding: 5px 0;
+  margin: 0 5px;
+  border-bottom: 1px solid #e6e6e6;
+  cursor: pointer;
+}
+
+.left-sidebar-item > p {
+  color: black;
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.left-sidebar-item > img{
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+#left-sidebar-item-wrapper{
+  width: 100%;
+  overflow: scroll;
 }
