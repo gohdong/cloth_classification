@@ -43,7 +43,12 @@ p {
 
 #main-contents{
   width: 100%;
+  min-width: 500px;
+  text-align: center;
   flex-grow: 1;
+  overflow: scroll;
+  height: calc(100vh - 91px);
+
 }
 
 #right-sidebar{
@@ -74,10 +79,6 @@ p {
   display: flex;
 }
 
-#main-contents{
-  min-width: 500px;
-  text-align: center;
-}
 
 /*#image-zone{*/
 /*  */

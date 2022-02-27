@@ -68,7 +68,6 @@ export default function LeftSidebar() {
 					</div>
 			}
 			<div id="left-sidebar-buttons">
-				{/* TODO add handler*/}
 				<p onClick={addItems}>+</p>
 
 				<p onClick={clickClear()}>Clear All</p>
