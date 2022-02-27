@@ -1,5 +1,5 @@
 import React from "react";
-import {useRecoilValue, useResetRecoilState, useSetRecoilState} from "recoil";
+import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {imagesSizeState, imageState, selectedItemID} from "../recoil/imageState";
 
 export default function LeftSidebar() {
@@ -7,7 +7,7 @@ export default function LeftSidebar() {
 	const imageLength = useRecoilValue(imagesSizeState);
 	const imageListReset = useResetRecoilState(imageState);
 	const currentIDReset = useResetRecoilState(selectedItemID);
-	const setCurrentID = useSetRecoilState(selectedItemID);
+	const [currentID, setCurrentID] = useRecoilState(selectedItemID);
 
 	function clickClear() {
 		return () => {
@@ -26,10 +26,10 @@ export default function LeftSidebar() {
 		<div id="left-sidebar">
 			{
 				imageLength === 0 ?
-					<p>drag or add items</p> :
+					<p>파일을 추가해주세요.</p> :
 					<div id="left-sidebar-item-wrapper">
 						{Array.from(imagesList).map((value, index) =>
-							<div key={value[1].id} className="left-sidebar-item" onClick={clickItem(value[0])}>
+							<div key={value[1].id} className={`left-sidebar-item ${value[1].id === currentID ? "selected-item" : ""}`} onClick={clickItem(value[0])}>
 								<img src={URL.createObjectURL(value[1].file)} alt={`uploaded_image_${index}`}/>
 								<p className="item-title">{value[1].file.name}</p>
 							</div>,

@@ -10,12 +10,12 @@ export function onDropHandler(images: Map<string, Image>,
 	for (const [index, item] of acceptedFiles.entries()) {
 		const fileID = hash(item);
 
-		if (index === 0) {
-			setID(fileID);
-		}
-
 
 		if (!images.has(fileID)) {
+			if (index === 0) {
+				setID(fileID);
+			}
+
 			const tempMap = new Map<string, Image>();
 
 			tempMap.set(fileID, {
@@ -38,6 +38,7 @@ export function onDropHandler(images: Map<string, Image>,
 export default function MainContents() {
 	const [images, setImages] = useRecoilState(imageState);
 	const imagesCount = useRecoilValue(imagesSizeState);
+	// eslint-disable-next-line no-unused-vars
 	const [currentItemID, setCurrentItemID] = useRecoilState(selectedItemID);
 
 
@@ -46,19 +47,21 @@ export default function MainContents() {
 	}, []);
 
 	// eslint-disable-next-line no-unused-vars
-	const {getRootProps, getInputProps, isDragActive} = useDropzone({accept: "image/jpeg,image/png,image/jpg", noClick: imagesCount > 0, onDrop});
+	const {getRootProps, getInputProps, isDragActive} = useDropzone({
+		accept: "image/jpeg,image/png,image/jpg",
+		noClick: imagesCount > 0,
+		onDrop,
+	});
 
 	return (
-		<div id="main-contents" {...getRootProps()}>
-			{/* <input {...getInputProps()}/>*/}
+		<div id="main-contents" className={isDragActive ? "drag-on" : ""} {...getRootProps()}>
+			<input {...getInputProps()}/>
 			<>
 				{
-					imagesCount > 0 ?
+					imagesCount > 0 && images.has(currentItemID) ?
 						<p>
 							<img src={
-
-								// @ts-ignore
-								URL.createObjectURL(images.get(currentItemID).file)
+								URL.createObjectURL(images.get(currentItemID)!.file)
 							} alt="" width="400px"/>
 						</p> :
 						<>
@@ -67,8 +70,8 @@ export default function MainContents() {
 							</div>
 							{
 								isDragActive ?
-									<p>Drop the files here ...</p> :
-									<p>Drag 'n' drop some files here, or click to select files</p>
+									<p>파일을 놓아주세요!</p> :
+									<p>시작하려면 파일을 끌어오거나 선택해주세요.</p>
 							}
 						</>
 				}
