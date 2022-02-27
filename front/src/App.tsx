@@ -4,8 +4,8 @@ import "./App.css";
 import AppBar from "./appbar/AppBar";
 import LeftSidebar from "./left_sidebar/LeftSidebar";
 import RightSideBar from "./right_sidebar/RightSideBar";
-import MyDropzone from "./main/test";
 import BottomStatusBar from "./bottom_status_bar/BottomStatusBar";
+import MainContents from "./main/MainContents";
 
 function App() {
 	return (
@@ -16,9 +16,7 @@ function App() {
 					<div id="static-contents">
 						<div className="flex-wrapper">
 							<LeftSidebar/>
-							<div id="main-contents">
-								<MyDropzone/>
-							</div>
+							<MainContents/>
 						</div>
 					</div>
 					<div id="toggle-contents">

@@ -1,12 +1,12 @@
-import React, {useCallback} from "react";
 import {useDropzone} from "react-dropzone";
+import React, {useCallback} from "react";
 import {useRecoilState, useRecoilValue} from "recoil";
-import {imageState, Image, imagesSizeState, selectedItemID} from "../recoil/imageState";
+import {Image, imagesSizeState, imageState, selectedItemID} from "../recoil/imageState";
 
 const hash = require("object-hash");
 
 export function onDropHandler(images: Map<string, Image>,
-	setImages: Function, setID : Function, acceptedFiles: File[]) {
+	setImages: Function, setID: Function, acceptedFiles: File[]) {
 	for (const [index, item] of acceptedFiles.entries()) {
 		const fileID = hash(item);
 
@@ -34,7 +34,8 @@ export function onDropHandler(images: Map<string, Image>,
 	}
 }
 
-export default function MyDropzone() {
+
+export default function MainContents() {
 	const [images, setImages] = useRecoilState(imageState);
 	const imagesCount = useRecoilValue(imagesSizeState);
 	const [currentItemID, setCurrentItemID] = useRecoilState(selectedItemID);
@@ -43,33 +44,35 @@ export default function MyDropzone() {
 	const onDrop = useCallback(acceptedFiles => {
 		onDropHandler(images, setImages, setCurrentItemID, acceptedFiles);
 	}, []);
-	const {getRootProps, getInputProps, isDragActive} = useDropzone({accept: "image/jpeg,image/png,image/jpg", onDrop});
 
+	// eslint-disable-next-line no-unused-vars
+	const {getRootProps, getInputProps, isDragActive} = useDropzone({accept: "image/jpeg,image/png,image/jpg", noClick: imagesCount > 0, onDrop});
 
 	return (
-		<>
-			{
-				imagesCount > 0 ?
-					<p>
-						<img src={
-							// @ts-ignore
-							URL.createObjectURL(images.get(currentItemID).file)
-						} alt="" width="400px" />
-					</p> :
-					<>
-						<div id="placeholder" {...getRootProps()}>
-							<input {...getInputProps()} />
-							<div/>
-						</div>
-						{
-							isDragActive ?
-								<p>Drop the files here ...</p> :
-								<p>Drag 'n' drop some files here, or click to select files</p>
-						}
-					</>
-			}
-		</>
+		<div id="main-contents" {...getRootProps()}>
+			{/* <input {...getInputProps()}/>*/}
+			<>
+				{
+					imagesCount > 0 ?
+						<p>
+							<img src={
 
-
+								// @ts-ignore
+								URL.createObjectURL(images.get(currentItemID).file)
+							} alt="" width="400px"/>
+						</p> :
+						<>
+							<div id="placeholder">
+								<div/>
+							</div>
+							{
+								isDragActive ?
+									<p>Drop the files here ...</p> :
+									<p>Drag 'n' drop some files here, or click to select files</p>
+							}
+						</>
+				}
+			</>
+		</div>
 	);
 }
