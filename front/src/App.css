@@ -38,6 +38,7 @@ p {
 #left-sidebar-buttons > p {
   line-height: 30px;
   cursor: pointer;
+  color: #808080;
 }
 
 #main-contents{
