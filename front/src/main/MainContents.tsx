@@ -1,5 +1,5 @@
 import {useDropzone} from "react-dropzone";
-import React, {useCallback} from "react";
+import React, {useCallback, useEffect} from "react";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {Image, imagesSizeState, imageState, selectedItemID} from "../recoil/imageState";
 
@@ -53,20 +53,39 @@ export default function MainContents() {
 		onDrop,
 	});
 
+	useEffect(() => {
+		const file = images.get(currentItemID)?.file;
+
+		if (file !== undefined && images.get(currentItemID)?.modelResultTag.length === 0) {
+			const formData = new FormData();
+
+			formData.append("img", file);
+			fetch("http://localhost:4000/check", {
+				method: "POST",
+				body: formData,
+			})
+				.then(response => response.json())
+				.then(data => {
+					console.log(data);
+					images.get(currentItemID)?.modelResultTag.push("asd");
+				});
+		}
+	}, [currentItemID]);
+
 	return (
 		<div id="main-contents" className={isDragActive ? "drag-on" : ""} {...getRootProps()}>
-			<input {...getInputProps()}/>
+			<input {...getInputProps()} />
 			<>
 				{
 					imagesCount > 0 && images.has(currentItemID) ?
 						<p>
 							<img src={
 								URL.createObjectURL(images.get(currentItemID)!.file)
-							} alt="" width="400px"/>
+							} alt="" width="400px" />
 						</p> :
 						<>
 							<div id="placeholder">
-								<div/>
+								<div />
 							</div>
 							{
 								isDragActive ?
