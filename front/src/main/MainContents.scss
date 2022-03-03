@@ -1,0 +1,42 @@
+#main-contents{
+  width: 100%;
+  min-width: 500px;
+  text-align: center;
+  flex-grow: 1;
+  overflow: scroll;
+  height: calc(100vh - 91px);
+
+}
+
+
+#placeholder{
+  width: 450px;
+  height: 300px;
+  margin: 100px auto 0;
+  border-radius: 30px;
+  border: 2px dashed #e6e6e6;
+  display: flex;
+}
+
+#placeholder > div{
+  margin: auto;
+  width: 100px;
+  height: 80px;
+  border-radius: 10px;
+  background-repeat: no-repeat;
+  background-image: url("../../images/placeholder.png");
+  background-size: cover ;
+}
+
+
+
+.drag-on {
+  border: 3px solid #6F90F8;
+}
+
+
+
+#placeholder + p{
+  margin: 10px 0;
+  color: #808080;
+}

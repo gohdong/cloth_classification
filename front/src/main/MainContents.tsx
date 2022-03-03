@@ -2,6 +2,7 @@ import {useDropzone} from "react-dropzone";
 import React, {useCallback} from "react";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {Image, imagesSizeState, imageState, selectedItemID} from "../recoil/imageState";
+import "./MainContents.scss";
 
 const hash = require("object-hash");
 

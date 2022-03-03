@@ -1,6 +1,6 @@
 import React from "react";
 // import {atom} from "recoil";
-import "./App.css";
+import "./App.scss";
 import AppBar from "./appbar/AppBar";
 import LeftSidebar from "./left_sidebar/LeftSidebar";
 import RightSideBar from "./right_sidebar/RightSideBar";
