@@ -2,6 +2,7 @@ import React from "react";
 import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {imagesSizeState, imageState, selectedItemID} from "../recoil/imageState";
 import {onDropHandler} from "../main/MainContents";
+import "./LeftSidebar.scss";
 
 export default function LeftSidebar() {
 	const [images, setImages] = useRecoilState(imageState);
