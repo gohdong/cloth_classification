@@ -17,6 +17,7 @@ export default function LeftSidebar() {
 
 		result.setAttribute("type", "file");
 		result.setAttribute("multiple", "multiple");
+		result.setAttribute("accept", "image/jpeg,image/png,image/jpg");
 
 		result.addEventListener("change", ev => {
 			ev.preventDefault();
