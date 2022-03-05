@@ -54,18 +54,20 @@ sub2.set("female", "gender");
 sub2.set("unisex", "gender");
 
 // male", "female", "unisex
+function createRes() {
+	var res = new Map();
+	res.set("top", { value: 0, subcate: [] })
+	res.set("bottom", { value: 0, subcate: [] })
+	res.set("one", { value: 0, subcate: [] })
+	res.set("outer", { value: 0, subcate: [] })
+	res.set("shoes", { value: 0, subcate: [] })
+	res.set("acc", { value: 0, subcate: [] })
+	res.set("bag", { value: 0, subcate: [] })
 
-var res = new Map();
-res.set("top", { value: 0, subcate: [] })
-res.set("bottom", { value: 0, subcate: [] })
-res.set("one", { value: 0, subcate: [] })
-res.set("outer", { value: 0, subcate: [] })
-res.set("shoes", { value: 0, subcate: [] })
-res.set("acc", { value: 0, subcate: [] })
-res.set("bag", { value: 0, subcate: [] })
-
-res.set('gender', { value: 0, subcate: [] });
-res.set("color", { value: 0, subcate: [] });
+	res.set('gender', { value: 0, subcate: [] });
+	res.set("color", { value: 0, subcate: [] });
+	return res;
+}
 
 
 
@@ -93,7 +95,7 @@ function processImage(path) {
 function toJson(data) {
 	var ob = new Object();
 
-	var map = new Map(res);
+	var map = createRes();
 
 	for (let [index, element] of data.entries()) {
 		if (main.includes(classes[index])) {
@@ -119,14 +121,15 @@ function toJson(data) {
 	// console.log(map)
 	// ob.probs = arr;
 	ob.probs = [];
-	new Array(map).sort((a, b) => -1 * (a.value - b.vlaue));
+	new Array(map).sort((a, b) => -1.0 * (a.value - b.value));
 	map.forEach((value, key) => {
-		value.subcate.sort((a, b) => -1 * (a.value - b.value));
+		value.subcate.sort((a, b) => -1.0 * (a.value - b.value));
 		ob.probs.push({
 			"class": key,
 			"value": value.value,
 			"subcate": value.subcate
 		})
+		console.log
 	})
 
 	return ob;
