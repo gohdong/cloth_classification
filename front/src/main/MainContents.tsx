@@ -58,7 +58,7 @@ export default function MainContents() {
 	useEffect(() => {
 		const file = images.get(currentItemID)?.file;
 
-		if (file !== undefined && images.get(currentItemID)?.modelResultTag.length === 0) {
+		if (file !== undefined && images.get(currentItemID)?.modelProbs.size === 0) {
 			const formData = new FormData();
 
 			formData.append("img", file);

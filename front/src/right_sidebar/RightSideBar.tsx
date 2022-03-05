@@ -7,7 +7,14 @@ export function convertValue(data: Map<String, Map<String, Number>> | undefined)
 	if (data === undefined) return null;
 	return (
 		<div>
-			{data.get("top")?.get("shirt")}
+			{Array.from(data).map(([mainKey, mainValue], i) => (
+				<div key={i}>
+					<p>{mainKey}</p>
+					<ul>{Array.from(mainValue).map(([subKey, subValue], j) => (
+						<li key={j}>{subKey} : {subValue}</li>
+					))}</ul>
+				</div>
+			))}
 		</div>
 	);
 }
