@@ -25,6 +25,7 @@ export function onDropHandler(images: Map<string, Image>,
 				edited: false,
 				usersTag: [],
 				modelResultTag: [],
+				modelProbs: new Map(),
 			});
 
 			setImages((prev: Map<string, Image>) => new Map<string, Image>(
@@ -67,8 +68,14 @@ export default function MainContents() {
 			})
 				.then(response => response.json())
 				.then(data => {
-					console.log(data);
-					images.get(currentItemID)?.modelResultTag.push("asd");
+					for (let i = 0; i < data.probs.length; i++) {
+						images.get(currentItemID)?.modelProbs.set(data.probs[i].class, new Map());
+						for (let j = 0; j < data.probs[i].subcate.length; j++) {
+							images.get(currentItemID)?.modelProbs.get(data.probs[i].class)?.set(
+								data.probs[i].subcate[j].class, data.probs[i].subcate[j].value);
+						}
+					}
+					console.log(images.get(currentItemID)?.modelProbs.entries());
 				});
 		}
 	}, [currentItemID]);

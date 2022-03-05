@@ -2,11 +2,12 @@ import {atom, selector} from "recoil";
 
 
 export interface Image {
-	id:string,
+	id: string,
 	file: File,
-	edited : boolean,
-	usersTag : Array<String>,
-	modelResultTag : Array<String>,
+	edited: boolean,
+	usersTag: Array<String>,
+	modelResultTag: Array<String>,
+	modelProbs: Map<String, Map<String, Number>>,
 }
 
 
