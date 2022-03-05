@@ -2,6 +2,7 @@ import React from "react";
 import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {imagesSizeState, imageState, selectedItemID} from "../recoil/imageState";
 import {onDropHandler} from "../main/MainContents";
+import "./LeftSidebar.scss";
 
 export default function LeftSidebar() {
 	const [images, setImages] = useRecoilState(imageState);
@@ -16,6 +17,7 @@ export default function LeftSidebar() {
 
 		result.setAttribute("type", "file");
 		result.setAttribute("multiple", "multiple");
+		result.setAttribute("accept", "image/jpeg,image/png,image/jpg");
 
 		result.addEventListener("change", ev => {
 			ev.preventDefault();

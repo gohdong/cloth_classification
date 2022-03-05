@@ -10,3 +10,13 @@
   font-size: 20px;
   font-weight: bold;
 }
+
+.app-bar-wrap{
+  display: flex;
+  justify-content: space-between;
+}
+
+.icons{
+  fill: #808080;
+  cursor: pointer;
+}
