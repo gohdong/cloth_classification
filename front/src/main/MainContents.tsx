@@ -48,21 +48,21 @@ export function onDropHandler(images: Map<string, Image>,
 					}
 					console.log(modelResultTag);
 					/* 콘솔에 표시 */
+				})
+				.then(() => {
+					tempMap.set(fileID, {
+						id: fileID,
+						file: item,
+						edited: false,
+						usersTag: [],
+						modelResultTag,
+						modelProbs,
+					});
+					setImages((prev: Map<string, Image>) => new Map<string, Image>(
+						[...prev, ...tempMap],
+					),
+					);
 				});
-
-			tempMap.set(fileID, {
-				id: fileID,
-				file: item,
-				edited: false,
-				usersTag: [],
-				modelResultTag,
-				modelProbs,
-			});
-
-			setImages((prev: Map<string, Image>) => new Map<string, Image>(
-				[...prev, ...tempMap],
-			),
-			);
 		}
 	}
 }
