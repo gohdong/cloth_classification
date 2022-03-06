@@ -1,5 +1,5 @@
 import {useDropzone} from "react-dropzone";
-import React, {useCallback, useEffect} from "react";
+import React, {useCallback} from "react";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {Image, imagesSizeState, imageState, selectedItemID} from "../recoil/imageState";
 import "./MainContents.scss";
@@ -19,13 +19,45 @@ export function onDropHandler(images: Map<string, Image>,
 
 			const tempMap = new Map<string, Image>();
 
+			const modelResultTag = new Array(0);
+			const modelProbs = new Map();
+			const formData = new FormData();
+			let check = false;
+
+			formData.append("img", item);
+			fetch("http://localhost:4000/check", {
+				method: "POST",
+				body: formData,
+			})
+				.then(response => response.json())
+				.then(data => {
+					for (let i = 0; i < data.probs.length; i++) {
+						modelProbs.set(data.probs[i].class, new Map());
+						for (let j = 0; j < data.probs[i].subcate.length; j++) {
+							modelProbs.get(data.probs[i].class).set(data.probs[i].subcate[j].class,
+								data.probs[i].subcate[j].value);
+						}
+						if (data.probs[i].class === "gender") {
+							modelResultTag.push(data.probs[i].subcate[0].class);
+						} else if (data.probs[i].class === "color") {
+							modelResultTag.push(data.probs[i].subcate[0].class);
+						} else if (!check) {
+							modelResultTag.push(data.probs[i].class);
+							modelResultTag.push(data.probs[i].subcate[0].class);
+							check = true;
+						}
+					}
+					console.log(modelResultTag);
+					/* 콘솔에 표시 */
+				});
+
 			tempMap.set(fileID, {
 				id: fileID,
 				file: item,
 				edited: false,
 				usersTag: [],
-				modelResultTag: [],
-				modelProbs: new Map(),
+				modelResultTag,
+				modelProbs,
 			});
 
 			setImages((prev: Map<string, Image>) => new Map<string, Image>(
@@ -54,31 +86,6 @@ export default function MainContents() {
 		noClick: imagesCount > 0,
 		onDrop,
 	});
-
-	useEffect(() => {
-		const file = images.get(currentItemID)?.file;
-
-		if (file !== undefined && images.get(currentItemID)?.modelProbs.size === 0) {
-			const formData = new FormData();
-
-			formData.append("img", file);
-			fetch("http://localhost:4000/check", {
-				method: "POST",
-				body: formData,
-			})
-				.then(response => response.json())
-				.then(data => {
-					for (let i = 0; i < data.probs.length; i++) {
-						images.get(currentItemID)?.modelProbs.set(data.probs[i].class, new Map());
-						for (let j = 0; j < data.probs[i].subcate.length; j++) {
-							images.get(currentItemID)?.modelProbs.get(data.probs[i].class)?.set(
-								data.probs[i].subcate[j].class, data.probs[i].subcate[j].value);
-						}
-					}
-					console.log(images.get(currentItemID)?.modelProbs.entries());
-				});
-		}
-	}, [currentItemID]);
 
 	return (
 		<div id="main-contents" className={isDragActive ? "drag-on" : ""} {...getRootProps()}>
