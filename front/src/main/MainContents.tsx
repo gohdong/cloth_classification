@@ -1,5 +1,5 @@
 import {useDropzone} from "react-dropzone";
-import React, {useCallback} from "react";
+import {useCallback} from "react";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {Image, imagesSizeState, imageState, selectedItemID} from "../recoil/imageState";
 import "./MainContents.scss";
@@ -92,11 +92,19 @@ export default function MainContents() {
 			<>
 				{
 					imagesCount > 0 && images.has(currentItemID) ?
-						<p>
+						<div id="main-contents-wrap">
 							<img src={
 								URL.createObjectURL(images.get(currentItemID)!.file)
-							} alt="" width="400px" />
-						</p> :
+							} alt="" />
+							<div id="category-area">
+								<ul>
+									<li>대분류</li>
+									<li>소분류</li>
+									<li>성별</li>
+									<li>색상</li>
+								</ul>
+							</div>
+						</div> :
 						<>
 							<div id="placeholder">
 								<div />
