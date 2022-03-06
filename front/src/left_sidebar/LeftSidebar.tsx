@@ -21,7 +21,7 @@ export default function LeftSidebar() {
 
 		result.addEventListener("change", ev => {
 			ev.preventDefault();
-			const tempFiles:File[] = [];
+			const tempFiles: File[] = [];
 
 
 			Array.prototype.forEach.call(result.files, file => {
@@ -44,7 +44,7 @@ export default function LeftSidebar() {
 		};
 	}
 
-	function clickItem(id:string) {
+	function clickItem(id: string) {
 		return () => {
 			setCurrentID(id);
 		};
@@ -63,7 +63,7 @@ export default function LeftSidebar() {
 					<div id="left-sidebar-item-wrapper">
 						{Array.from(images).map((value, index) =>
 							<div key={value[1].id} className={`left-sidebar-item ${value[1].id === currentID ? "selected-item" : ""}`} onClick={clickItem(value[0])}>
-								<img src={URL.createObjectURL(value[1].file)} alt={`uploaded_image_${index}`}/>
+								<img src={URL.createObjectURL(value[1].file)} alt={`uploaded_image_${index}`} />
 								<p className="item-title">{value[1].file.name}</p>
 							</div>,
 						)}
