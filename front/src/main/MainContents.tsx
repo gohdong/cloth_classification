@@ -6,11 +6,16 @@ import "./MainContents.scss";
 
 const hash = require("object-hash");
 
-export function onDropHandler(images: Map<string, Image>,
+export async function onDropHandler(images: Map<string, Image>,
 	setImages: Function, setID: Function, acceptedFiles: File[]) {
+	try {
+		await fetch("http://localhost:4000/");
+	} catch (error) {
+		alert("Fail to connect Server");
+		return;
+	}
 	for (const [index, item] of acceptedFiles.entries()) {
 		const fileID = hash(item);
-
 
 		if (!images.has(fileID)) {
 			if (index === 0) {
@@ -25,6 +30,7 @@ export function onDropHandler(images: Map<string, Image>,
 			let check = false;
 
 			formData.append("img", item);
+
 			fetch("http://localhost:4000/check", {
 				method: "POST",
 				body: formData,
@@ -62,6 +68,9 @@ export function onDropHandler(images: Map<string, Image>,
 						[...prev, ...tempMap],
 					),
 					);
+				})
+				.catch(e => {
+					alert(e);
 				});
 		}
 	}
