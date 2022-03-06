@@ -6,7 +6,7 @@ export interface Image {
 	file: File,
 	edited: boolean,
 	usersTag: Array<String>,
-	modelResultTag: Array<String>,
+	modelResultTag: Map<String, String>,
 	modelProbs: Map<String, Map<String, Number>>,
 }
 

@@ -19,7 +19,7 @@ export function onDropHandler(images: Map<string, Image>,
 
 			const tempMap = new Map<string, Image>();
 
-			const modelResultTag = new Array(0);
+			const modelResultTag = new Map();
 			const modelProbs = new Map();
 			const formData = new FormData();
 			let check = false;
@@ -38,12 +38,11 @@ export function onDropHandler(images: Map<string, Image>,
 								data.probs[i].subcate[j].value);
 						}
 						if (data.probs[i].class === "gender") {
-							modelResultTag.push(data.probs[i].subcate[0].class);
+							modelResultTag.set("gender", data.probs[i].subcate[0].class);
 						} else if (data.probs[i].class === "color") {
-							modelResultTag.push(data.probs[i].subcate[0].class);
+							modelResultTag.set("color", data.probs[i].subcate[0].class);
 						} else if (!check) {
-							modelResultTag.push(data.probs[i].class);
-							modelResultTag.push(data.probs[i].subcate[0].class);
+							modelResultTag.set(data.probs[i].class, data.probs[i].subcate[0].class === null ? "" : data.probs[i].subcate[0].class);
 							check = true;
 						}
 					}
