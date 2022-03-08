@@ -6,16 +6,31 @@ import {imageState, selectedItemID} from "../recoil/imageState";
 export function convertValue(data: Map<String, Map<String, Number>> | undefined) {
 	if (data === undefined) return null;
 	return (
-		<div>
+		<>
 			{Array.from(data).map(([mainKey, mainValue], i) => (
 				<div key={i}>
 					<p>{mainKey}</p>
-					<ul>{Array.from(mainValue).map(([subKey, subValue], j) => (
-						<li key={j}>{subKey} : {subValue}</li>
-					))}</ul>
+					<ul>
+						{Array.from(mainValue).map(([subKey, subValue], j) => (
+							<>
+								<li key={j}>
+									<div className="chart-wrap">
+										<div className={"chart-background"}>
+											<div className={"chart-inner"} style={{
+												width: `${(+subValue * 100).toFixed(2)}%`,
+											}}>
+											</div>
+										</div>
+										<p>{subKey} {(+subValue * 100).toFixed(2)}</p>
+									</div>
+
+								</li>
+							</>
+						))}
+					</ul>
 				</div>
 			))}
-		</div>
+		</>
 	);
 }
 

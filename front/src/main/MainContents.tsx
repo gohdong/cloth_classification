@@ -31,12 +31,20 @@ export function onDropHandler(images: Map<string, Image>,
 			})
 				.then(response => response.json())
 				.then(data => {
+					console.log(data);
 					for (let i = 0; i < data.probs.length; i++) {
 						modelProbs.set(data.probs[i].class, new Map());
-						for (let j = 0; j < data.probs[i].subcate.length; j++) {
-							modelProbs.get(data.probs[i].class).set(data.probs[i].subcate[j].class,
-								data.probs[i].subcate[j].value);
+						if (data.probs[i].class === "shoes" || data.probs[i].class === "acc" || data.probs[i].class === "bag") {
+							modelProbs.get(data.probs[i].class).set(data.probs[i].class,
+								data.probs[i].value);
+						} else {
+							for (let j = 0; j < data.probs[i].subcate.length; j++) {
+								modelProbs.get(data.probs[i].class).set(data.probs[i].subcate[j].class,
+									data.probs[i].subcate[j].value);
+							}
 						}
+
+
 						if (data.probs[i].class === "gender") {
 							modelResultTag.set("gender", data.probs[i].subcate[0].class);
 						} else if (data.probs[i].class === "color") {
@@ -47,6 +55,7 @@ export function onDropHandler(images: Map<string, Image>,
 						}
 					}
 					console.log(modelResultTag);
+					console.log(modelProbs);
 					/* 콘솔에 표시 */
 				})
 				.then(() => {
