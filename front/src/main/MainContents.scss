@@ -24,12 +24,20 @@
     display: grid;
     height: 100%;
     grid-template-rows: 1fr 1fr;
-    > img{
-      width: 400px;
-      margin: auto;
-      max-height: 40vh;
-      object-fit: contain;
+
+    > .image-wrap {
+      border-bottom: #e6e6e6 1px solid;
+      display: grid;
+      box-sizing: content-box;
+
+      > img{
+        width: 400px;
+        margin: auto;
+        max-height: 40vh;
+        object-fit: contain;
+      }
     }
+
   }
 
 

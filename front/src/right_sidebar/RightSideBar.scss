@@ -4,6 +4,12 @@
   transition: width 200ms ease-in;
   overflow: scroll;
 
+  .tag-title{
+    font-weight: bold;
+    margin: 10px 0 10px 25px;
+    font-size: 18px;
+  }
+
   > div{
     grid-row: 1;
   }
@@ -11,6 +17,7 @@
   ul{
     list-style: none;
     padding: 0 25px;
+    margin: 0;
   }
 
   .chart-wrap {
@@ -21,6 +28,7 @@
       top: 5px;
       left: 5px;
       color: white;
+      font-weight: bold;
     }
     .chart-background{
       width: 250px;

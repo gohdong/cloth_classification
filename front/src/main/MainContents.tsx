@@ -102,9 +102,11 @@ export default function MainContents() {
 				{
 					imagesCount > 0 && images.has(currentItemID) ?
 						<div id="main-contents-wrap">
-							<img src={
-								URL.createObjectURL(images.get(currentItemID)!.file)
-							} alt="" />
+							<div className="image-wrap">
+								<img src={
+									URL.createObjectURL(images.get(currentItemID)!.file)
+								} alt="" />
+							</div>
 							<div id="category-area">
 								<ul>
 									<li>대분류</li>

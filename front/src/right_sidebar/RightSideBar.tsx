@@ -9,7 +9,7 @@ export function convertValue(data: Map<String, Map<String, Number>> | undefined)
 		<>
 			{Array.from(data).map(([mainKey, mainValue], i) => (
 				<div key={i}>
-					<p>{mainKey}</p>
+					<p className="tag-title">{mainKey.toUpperCase()}</p>
 					<ul>
 						{Array.from(mainValue).map(([subKey, subValue], j) => (
 							<>
