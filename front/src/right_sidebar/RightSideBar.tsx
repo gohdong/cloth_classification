@@ -3,29 +3,27 @@ import "./RightSideBar.scss";
 import {sidebarState} from "../recoil/sidebarState";
 import {imageState, selectedItemID} from "../recoil/imageState";
 
-export function convertValue(data: Map<String, Map<String, Number>> | undefined) {
+
+export function ConvertValue({data}: { data: Map<String, Map<String, Number>> | undefined }) {
 	if (data === undefined) return null;
 	return (
 		<>
 			{Array.from(data).map(([mainKey, mainValue], i) => (
-				<div key={i}>
+				<div key={`${mainKey}${i}`}>
 					<p className="tag-title">{mainKey.toUpperCase()}</p>
 					<ul>
 						{Array.from(mainValue).map(([subKey, subValue], j) => (
-							<>
-								<li key={j}>
-									<div className="chart-wrap">
-										<div className={"chart-background"}>
-											<div className={"chart-inner"} style={{
-												width: `${(+subValue * 100).toFixed(2)}%`,
-											}}>
-											</div>
+							<li key={`${subKey}${j}`}>
+								<div className="chart-wrap">
+									<div className={"chart-background"}>
+										<div className={"chart-inner"} style={{
+											width: `${(+subValue * 100).toFixed(2)}%`,
+										}}>
 										</div>
-										<p>{subKey} {(+subValue * 100).toFixed(2)}</p>
 									</div>
-
-								</li>
-							</>
+									<p>{subKey} {(+subValue * 100).toFixed(2)}</p>
+								</div>
+							</li>
 						))}
 					</ul>
 				</div>
@@ -34,6 +32,7 @@ export function convertValue(data: Map<String, Map<String, Number>> | undefined)
 	);
 }
 
+
 export default function RightSideBar() {
 	const isSideBarOpen = useRecoilValue(sidebarState);
 	const currentItemID = useRecoilValue(selectedItemID);
@@ -41,7 +40,7 @@ export default function RightSideBar() {
 
 	return (
 		<div id="right-sidebar" className={isSideBarOpen ? "right-sidebar-on" : "right-sidebar-off"}>
-			{convertValue(images.get(currentItemID)?.modelProbs)}
+			<ConvertValue data={images.get(currentItemID)?.modelProbs}/>
 		</div>
 	);
 }

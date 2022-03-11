@@ -1,26 +1,58 @@
-#main-contents{
+#main-contents {
   width: 100%;
   min-width: 500px;
   flex-grow: 1;
   overflow: scroll;
   height: calc(100vh - 91px);
 
-  p{
+  p {
     text-align: center;
   }
 
-  #category-area{
-    width: 400px;
-    margin: 0 auto;
-    ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
+  #main-bottom {
+    overflow: scroll;
+
+    #category-area {
+      width: 90%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .buttons-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        .category-buttons {
+          border: 1px solid #6F90F8;
+          padding: 5px 20px;
+          border-radius: 100px;
+        }
+
+        .color-buttons {
+          padding: 5px 20px;
+          border-radius: 100px;
+          color: white;
+          font-weight: bold;
+        }
+
+        .color-select {
+          display: flex;
+        }
+
+      }
     }
   }
 
 
-  #main-contents-wrap{
+  #main-contents-wrap {
     display: grid;
     height: 100%;
     grid-template-rows: 1fr 1fr;
@@ -30,7 +62,7 @@
       display: grid;
       box-sizing: content-box;
 
-      > img{
+      > img {
         width: 400px;
         margin: auto;
         max-height: 40vh;
@@ -41,11 +73,10 @@
   }
 
 
-
 }
 
 
-#placeholder{
+#placeholder {
   width: 450px;
   height: 300px;
   margin: 100px auto 0;
@@ -54,17 +85,16 @@
   display: flex;
 }
 
-#placeholder > div{
+#placeholder > div {
   margin: auto;
   width: 100px;
   height: 80px;
   border-radius: 10px;
   background-repeat: no-repeat;
   background-image: url("../../images/placeholder.png");
-  background-size: cover ;
+  background-size: cover;
 
 }
-
 
 
 .drag-on {
@@ -72,8 +102,7 @@
 }
 
 
-
-#placeholder + p{
+#placeholder + p {
   margin: 10px 0;
   color: #808080;
 }
