@@ -5,9 +5,9 @@ export interface Image {
 	id: string,
 	file: File,
 	edited: boolean,
-	usersTag: Array<String>,
-	modelResultTag: Map<String, String>,
-	modelProbs: Map<String, Map<String, Number>>,
+	usersTag: Map<string, string>,
+	modelResultTag: Map<string, string>,
+	modelProbs: Map<string, Map<string, Number>>,
 }
 
 

@@ -1,9 +1,10 @@
 import {useDropzone} from "react-dropzone";
-import {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {Image, imagesSizeState, imageState, selectedItemID} from "../recoil/imageState";
 import "./MainContents.scss";
-import {bigCategory, categoryToKR, color, colorCode, colorToKR, gender} from "./category";
+// eslint-disable-next-line no-unused-vars
+import {bigCategory, categoryToKR, color, colorCode, colorToKR, gender, smallCategory} from "./category";
 
 const hash = require("object-hash");
 
@@ -23,7 +24,6 @@ export function onDropHandler(images: Map<string, Image>,
 			const modelResultTag = new Map();
 			const modelProbs = new Map();
 			const formData = new FormData();
-			let check = false;
 
 			formData.append("img", item);
 			fetch("http://localhost:4000/check", {
@@ -49,9 +49,9 @@ export function onDropHandler(images: Map<string, Image>,
 							modelResultTag.set("gender", data.probs[i].subcate[0].class);
 						} else if (data.probs[i].class === "color") {
 							modelResultTag.set("color", data.probs[i].subcate[0].class);
-						} else if (!check) {
-							modelResultTag.set(data.probs[i].class, data.probs[i].subcate[0].class === null ? "" : data.probs[i].subcate[0].class);
-							check = true;
+						} else if (!modelResultTag.has("main")) {
+							modelResultTag.set("main", data.probs[i].class);
+							modelResultTag.set("sub", data.probs[i].subcate[0].class === null ? "" : data.probs[i].subcate[0].class);
 						}
 					}
 					/* 콘솔에 표시 */
@@ -61,7 +61,7 @@ export function onDropHandler(images: Map<string, Image>,
 						id: fileID,
 						file: item,
 						edited: false,
-						usersTag: [],
+						usersTag: new Map(modelResultTag),
 						modelResultTag,
 						modelProbs,
 					});
@@ -79,22 +79,13 @@ export default function MainContents() {
 	const imagesCount = useRecoilValue(imagesSizeState);
 	const [currentItemID, setCurrentItemID] = useRecoilState(selectedItemID);
 	// eslint-disable-next-line no-unused-vars
-	const [currentBigCategory, setCurrentBigCategory] = useState<String>("");
+	const [currentBigCategory, setCurrentBigCategory] = useState<string>("");
 	// eslint-disable-next-line no-unused-vars
-	const [currentSmallCategory, setCurrentSmallCategory] = useState<String>("");
+	const [currentSmallCategory, setCurrentSmallCategory] = useState<string>("");
 	// eslint-disable-next-line no-unused-vars
-	const [currentGender, setCurrentGender] = useState<String>("");
+	const [currentGender, setCurrentGender] = useState<string>("");
 	// eslint-disable-next-line no-unused-vars
-	const [currentColor, setCurrentColor] = useState<String>("");
-
-	function getCategory() : Array<String> {
-		const currentImage = images.get(currentItemID);
-		const categorys = Array.from(currentImage?.modelResultTag.keys()!);
-
-
-		return [categorys[0], currentImage?.modelResultTag.get(categorys[0])!];
-	}
-
+	const [currentColor, setCurrentColor] = useState<string>("");
 
 	const onDrop = useCallback(acceptedFiles => {
 		onDropHandler(images, setImages, setCurrentItemID, acceptedFiles);
@@ -106,18 +97,49 @@ export default function MainContents() {
 		onDrop,
 	});
 
-	useEffect(() => {
-		if (imagesCount > 0 && images.has(currentItemID)) {
-			const currentImage = images.get(currentItemID);
-			const [bigC, smallC] = getCategory();
+	const getCategory = async () => {
+		setCurrentBigCategory(images.get(currentItemID)?.usersTag.get("main") ?? "");
+		setCurrentSmallCategory(images.get(currentItemID)?.usersTag.get("sub") ?? "");
+		setCurrentGender(images.get(currentItemID)?.usersTag.get("gender") ?? "");
+		setCurrentColor(images.get(currentItemID)?.usersTag.get("color") ?? "");
+	};
 
-			setCurrentBigCategory(bigC);
-			setCurrentSmallCategory(smallC);
-			setCurrentGender(currentImage?.modelResultTag.get("gender")!);
-			setCurrentColor(currentImage?.modelResultTag.get("color")!);
-			console.log(currentBigCategory, currentSmallCategory, currentGender, currentColor);
-		}
-	}, [currentItemID]);
+	// eslint-disable-next-line no-unused-vars
+	const onClickMainCategory = (value: string,
+		event: React.MouseEvent<HTMLDivElement>) => {
+		event.preventDefault();
+		console.log(value);
+		setCurrentBigCategory(value ?? "");
+		setCurrentSmallCategory("");
+		images.get(currentItemID)?.usersTag.set("main", value ?? "");
+		images.get(currentItemID)?.usersTag.set("sub", "");
+	};
+	// eslint-disable-next-line no-unused-vars
+	const onClickSubCategory = (value: string,
+		event: React.MouseEvent<HTMLDivElement>) => {
+		event.preventDefault();
+		setCurrentSmallCategory(value ?? "");
+		images.get(currentItemID)?.usersTag.set("sub", value);
+	};
+	// eslint-disable-next-line no-unused-vars
+	const onClickGenderCategory = (value: string,
+		event: React.MouseEvent<HTMLDivElement>) => {
+		event.preventDefault();
+		setCurrentGender(value ?? "");
+		images.get(currentItemID)?.usersTag.set("gender", value);
+	};
+	// eslint-disable-next-line no-unused-vars
+	const onClickColorCategory = (value: string,
+		event: React.MouseEvent<HTMLDivElement>) => {
+		event.preventDefault();
+		setCurrentColor(value ?? "");
+		images.get(currentItemID)?.usersTag.set("color", value);
+	};
+
+	useEffect(() => {
+		getCategory();
+	}, [currentItemID, images]);
+
 
 	return (
 		<div id="main-contents" className={isDragActive ? "drag-on" : ""} {...getRootProps()}>
@@ -138,25 +160,25 @@ export default function MainContents() {
 										<div className="buttons-wrap">
 											{bigCategory.map((value, index) =>
 												<div key={value}
-													className="category-buttons">{categoryToKR.get(value)}</div>)}
+													className={`category-buttons ${currentBigCategory === value ? "selected" : ""}`} onClick={e => onClickMainCategory(value, e)}>{categoryToKR.get(value)}</div>)}
 										</div>
 										<h3>소분류</h3>
 										<div className="buttons-wrap">
-											{bigCategory.map((value, index) =>
-												<div key={value} className="category-buttons">{categoryToKR.get(value)}</div>)}
+											{smallCategory.get(currentBigCategory)?.map((value, index) =>
+												<div key={value} className={`category-buttons ${currentSmallCategory === value ? "selected" : ""}`} onClick={e => onClickSubCategory(value, e)}>{categoryToKR.get(value)}</div>)}
 										</div>
 									</div>
 									<div id="main-bottom-right">
 										<h3>성별</h3>
 										<div className="buttons-wrap">
 											{gender.map((value, index) =>
-												<div key={value} className="category-buttons">{categoryToKR.get(value)}</div>)}
+												<div key={value} className={`category-buttons ${currentGender === value ? "selected" : ""}`} onClick={e => onClickGenderCategory(value, e)}>{categoryToKR.get(value)}</div>)}
 										</div>
 										<h3>색상</h3>
 										<div className="buttons-wrap">
 											{color.map((value, index) =>
 												<div
-													className="color-select color-buttons"
+													className={`category-buttons ${currentColor === value ? "selected" : ""}`} onClick={e => onClickColorCategory(value, e)}
 													key={value}
 													style={{
 														color: value === "white" || value === "yellow" || value === "beige" || value === "green" ?
