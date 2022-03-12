@@ -1,7 +1,50 @@
 #right-sidebar{
-  height: 100%;
+  height: calc(100vh - 91px);
   border-left: 1px solid #e6e6e6;
   transition: width 200ms ease-in;
+  overflow: scroll;
+
+  .tag-title{
+    font-weight: bold;
+    margin: 10px 0 10px 25px;
+    font-size: 18px;
+  }
+
+  > div{
+    grid-row: 1;
+  }
+
+  ul{
+    list-style: none;
+    padding: 0 25px;
+    margin: 0;
+  }
+
+  .chart-wrap {
+    position: relative;
+    margin: 0 0 5px;
+    p{
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      color: white;
+      font-weight: bold;
+    }
+    .chart-background{
+      width: 250px;
+      height: 30px;
+      background-color: rgba(111,144,248,0.7);
+      border-radius: 10px;
+
+      .chart-inner{
+        height: 30px;
+        background-color: #6F90F8;
+        border-radius: 10px;
+        top: 0;
+        left: 0;
+      }
+    }
+  }
 }
 
 .right-sidebar-on{
@@ -9,5 +52,9 @@
 }
 
 .right-sidebar-off{
+  * {
+    display: none;
+  }
+
   width: 0;
 }
