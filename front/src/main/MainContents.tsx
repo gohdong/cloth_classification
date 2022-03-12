@@ -184,7 +184,7 @@ export default function MainContents() {
 														color: value === "white" || value === "yellow" || value === "beige" || value === "green" ?
 															"black" :
 															"white",
-														backgroundColor: colorCode.get(value),
+														backgroundColor: currentColor === value ? "#6f90f8" : colorCode.get(value),
 														border: value === "white" ? "solid 1px #e6e6e6" : "",
 													}}>
 													{colorToKR.get(value)}
