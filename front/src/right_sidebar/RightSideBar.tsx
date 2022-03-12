@@ -2,6 +2,7 @@ import {useRecoilValue} from "recoil";
 import "./RightSideBar.scss";
 import {sidebarState} from "../recoil/sidebarState";
 import {imageState, selectedItemID} from "../recoil/imageState";
+import {categoryToKR, colorToKR} from "../main/category";
 
 
 export function ConvertValue({data}: { data: Map<String, Map<String, Number>> | undefined }) {
@@ -10,7 +11,7 @@ export function ConvertValue({data}: { data: Map<String, Map<String, Number>> | 
 		<>
 			{Array.from(data).map(([mainKey, mainValue], i) => (
 				<div key={`${mainKey}${i}`}>
-					<p className="tag-title">{mainKey.toUpperCase()}</p>
+					<p className="tag-title">{categoryToKR.get(String(mainKey))}</p>
 					<ul>
 						{Array.from(mainValue).map(([subKey, subValue], j) => (
 							<li key={`${subKey}${j}`}>
@@ -21,7 +22,10 @@ export function ConvertValue({data}: { data: Map<String, Map<String, Number>> | 
 										}}>
 										</div>
 									</div>
-									<p>{subKey} {(+subValue * 100).toFixed(2)}</p>
+									<p>{mainKey !== "color" ?
+										categoryToKR.get(String(subKey)) :
+										colorToKR.get(String(subKey))} {" "}
+									{(+subValue * 100).toFixed(2)}</p>
 								</div>
 							</li>
 						))}
