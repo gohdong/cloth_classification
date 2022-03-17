@@ -136,10 +136,41 @@ export default function MainContents() {
 		images.get(currentItemID)?.usersTag.set("color", value);
 	};
 
+
 	useEffect(() => {
 		getCategory();
 	}, [currentItemID, images]);
 
+
+	function getColorButtonColor(value: string) {
+		if (currentColor === value) {
+			if (value === "yellow" || value === "beige" || value === "green") {
+				return "black";
+			}
+			return "white";
+		}
+		return "black";
+	}
+
+	function getColorButtonBackgroundColor(value: string) {
+		if (currentColor === value) {
+			if (currentColor === "white") {
+				return "#6f90f8";
+			}
+			return 	colorCode.get(value);
+		}
+		return "white";
+	}
+
+	function getColorButtonBorder(value: string) {
+		if (currentColor === value) {
+			if (currentColor === "white") {
+				return "solid 1px #6f90f8";
+			}
+			return `solid 1px ${colorCode.get(value)}`;
+		}
+		return "solid 1px #6f90f8";
+	}
 
 	return (
 		<div id="main-contents" className={isDragActive ? "drag-on" : ""} {...getRootProps()}>
@@ -160,32 +191,39 @@ export default function MainContents() {
 										<div className="buttons-wrap">
 											{bigCategory.map((value, index) =>
 												<div key={value}
-													className={`category-buttons ${currentBigCategory === value ? "selected" : ""}`} onClick={e => onClickMainCategory(value, e)}>{categoryToKR.get(value)}</div>)}
+													className={`category-buttons ${currentBigCategory === value ? "selected" : ""}`}
+													onClick={e => onClickMainCategory(value, e)}>{categoryToKR.get(value)}</div>)}
 										</div>
 										<h3>소분류</h3>
 										<div className="buttons-wrap">
 											{smallCategory.get(currentBigCategory)?.map((value, index) =>
-												<div key={value} className={`category-buttons ${currentSmallCategory === value ? "selected" : ""}`} onClick={e => onClickSubCategory(value, e)}>{categoryToKR.get(value)}</div>)}
+												<div key={value}
+													className={`category-buttons ${currentSmallCategory === value ? "selected" : ""}`}
+													onClick={e => onClickSubCategory(value, e)}>{categoryToKR.get(value)}</div>)}
 										</div>
 									</div>
 									<div id="main-bottom-right">
 										<h3>성별</h3>
 										<div className="buttons-wrap">
 											{gender.map((value, index) =>
-												<div key={value} className={`category-buttons ${currentGender === value ? "selected" : ""}`} onClick={e => onClickGenderCategory(value, e)}>{categoryToKR.get(value)}</div>)}
+												<div key={value}
+													className={`category-buttons ${currentGender === value ? "selected" : ""}`}
+													onClick={e => onClickGenderCategory(value, e)}>{categoryToKR.get(value)}</div>)}
 										</div>
 										<h3>색상</h3>
 										<div className="buttons-wrap">
 											{color.map((value, index) =>
 												<div
-													className={`category-buttons ${currentColor === value ? "selected" : ""}`} onClick={e => onClickColorCategory(value, e)}
+													className={`category-buttons ${currentColor === value ? "selected" : ""}`}
+													onClick={e => onClickColorCategory(value, e)}
 													key={value}
 													style={{
-														color: value === "white" || value === "yellow" || value === "beige" || value === "green" ?
-															"black" :
-															"white",
-														backgroundColor: currentColor === value ? "#6f90f8" : colorCode.get(value),
-														border: value === "white" ? "solid 1px #e6e6e6" : "",
+														// color: value === "white" || value === "yellow" || value === "beige" || value === "green" ?
+														// 	"black" :
+														// 	"white",
+														color: getColorButtonColor(value),
+														backgroundColor: getColorButtonBackgroundColor(value),
+														border: getColorButtonBorder(value),
 													}}>
 													{colorToKR.get(value)}
 												</div>)}

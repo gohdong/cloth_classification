@@ -34,6 +34,7 @@
           border: 1px solid #6f90f8;
           padding: 5px 20px;
           border-radius: 100px;
+          cursor: pointer;
         }
 
         .color-buttons {
@@ -41,13 +42,17 @@
           border-radius: 100px;
           color: white;
           font-weight: bold;
+          cursor: pointer;
         }
 
         .color-select {
           display: flex;
         }
+
         .selected {
           background-color: #6f90f8;
+          color: white;
+          font-weight: bold;
         }
       }
     }
