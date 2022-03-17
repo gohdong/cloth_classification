@@ -31,7 +31,7 @@
         gap: 10px;
 
         .category-buttons {
-          border: 1px solid #6F90F8;
+          border: 1px solid #6f90f8;
           padding: 5px 20px;
           border-radius: 100px;
         }
@@ -46,11 +46,12 @@
         .color-select {
           display: flex;
         }
-
+        .selected {
+          background-color: #6f90f8;
+        }
       }
     }
   }
-
 
   #main-contents-wrap {
     display: grid;
@@ -69,12 +70,8 @@
         object-fit: contain;
       }
     }
-
   }
-
-
 }
-
 
 #placeholder {
   width: 450px;
@@ -93,14 +90,11 @@
   background-repeat: no-repeat;
   background-image: url("../../images/placeholder.png");
   background-size: cover;
-
 }
-
 
 .drag-on {
-  border: 3px solid #6F90F8;
+  border: 3px solid #6f90f8;
 }
-
 
 #placeholder + p {
   margin: 10px 0;
