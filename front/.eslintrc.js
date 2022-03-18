@@ -15,5 +15,8 @@ module.exports = {
         'react',
         '@typescript-eslint',
     ],
-    rules: {},
+    rules: {
+        "linebreak-style": 0,
+        'no-console': 'off',
+    },
 };

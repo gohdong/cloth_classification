@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {imagesSizeState, imageState, selectedItemID} from "../recoil/imageState";
 import {onDropHandler} from "../main/MainContents";
 import "./LeftSidebar.scss";
+import SkeletonLeft from "../skeletons/SkeletonLeft";
 
 export default function LeftSidebar() {
 	const [images, setImages] = useRecoilState(imageState);
@@ -10,31 +11,38 @@ export default function LeftSidebar() {
 	const imageListReset = useResetRecoilState(imageState);
 	const currentIDReset = useResetRecoilState(selectedItemID);
 	const [currentID, setCurrentID] = useRecoilState(selectedItemID);
+	const [clothes, setClothes] = useState(null as any);
 
 
-	function createVirtualInput() {
+	function CreateVirtualInput() {
 		const result = document.createElement("input");
 
-		result.setAttribute("type", "file");
-		result.setAttribute("multiple", "multiple");
-		result.setAttribute("accept", "image/jpeg,image/png,image/jpg");
+		useEffect(() => {
+			setTimeout(async () => {
+				result.setAttribute("type", "file");
+				result.setAttribute("multiple", "multiple");
+				result.setAttribute("accept", "image/jpeg,image/png,image/jpg");
 
-		result.addEventListener("change", ev => {
-			ev.preventDefault();
-			const tempFiles: File[] = [];
+				result.addEventListener("change", ev => {
+					ev.preventDefault();
+					const tempFiles: File[] = [];
 
 
-			Array.prototype.forEach.call(result.files, file => {
-				tempFiles.push(file);
-			});
+					Array.prototype.forEach.call(result.files, file => {
+						tempFiles.push(file);
+					});
 
-			onDropHandler(images, setImages, setCurrentID, tempFiles);
+					onDropHandler(images, setImages, setCurrentID, tempFiles);
+				});
+				const data = await result.type;
+
+				setClothes(data);
+			}, 2000);
 		});
-
 		return result;
 	}
 
-	const fileSelector = createVirtualInput();
+	const fileSelector = CreateVirtualInput();
 
 
 	function clickClear() {
@@ -57,7 +65,8 @@ export default function LeftSidebar() {
 
 	return (
 		<div id="left-sidebar">
-			{
+
+			{clothes && (
 				imageLength === 0 ?
 					<p>파일을 추가해주세요.</p> :
 					<div id="left-sidebar-item-wrapper">
@@ -68,7 +77,8 @@ export default function LeftSidebar() {
 							</div>,
 						)}
 					</div>
-			}
+			)}
+			{!clothes && <SkeletonLeft/>}
 			<div id="left-sidebar-buttons">
 				<p onClick={addItems}>+</p>
 

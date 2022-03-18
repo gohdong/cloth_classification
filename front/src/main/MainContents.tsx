@@ -1,8 +1,9 @@
 import {useDropzone} from "react-dropzone";
-import {useCallback} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {Image, imagesSizeState, imageState, selectedItemID} from "../recoil/imageState";
 import "./MainContents.scss";
+import SkeletonMain from "../skeletons/SkeletonMain";
 
 const hash = require("object-hash");
 
@@ -82,6 +83,7 @@ export default function MainContents() {
 	const imagesCount = useRecoilValue(imagesSizeState);
 	// eslint-disable-next-line no-unused-vars
 	const [currentItemID, setCurrentItemID] = useRecoilState(selectedItemID);
+	const [clothes, setClothes] = useState(null as any);
 
 
 	const onDrop = useCallback(acceptedFiles => {
@@ -95,11 +97,19 @@ export default function MainContents() {
 		onDrop,
 	});
 
+	useEffect(() => {
+		setTimeout(async () => {
+			const data = await String;
+
+			setClothes(data);
+		}, 2000);
+	});
+
 	return (
 		<div id="main-contents" className={isDragActive ? "drag-on" : ""} {...getRootProps()}>
 			<input {...getInputProps()} />
 			<>
-				{
+				{clothes && (
 					imagesCount > 0 && images.has(currentItemID) ?
 						<div id="main-contents-wrap">
 							<div className="image-wrap">
@@ -126,7 +136,8 @@ export default function MainContents() {
 									<p>시작하려면 파일을 끌어오거나 선택해주세요.</p>
 							}
 						</>
-				}
+				)}
+				{!clothes && <SkeletonMain/>}
 			</>
 		</div>
 	);
