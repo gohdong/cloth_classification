@@ -32,26 +32,31 @@ export function onDropHandler(images: Map<string, Image>,
 			})
 				.then(response => response.json())
 				.then(data => {
-					for (let i = 0; i < data.probs.length; i++) {
-						modelProbs.set(data.probs[i].class, new Map());
-						if (data.probs[i].class === "shoes" || data.probs[i].class === "acc" || data.probs[i].class === "bag") {
-							modelProbs.get(data.probs[i].class).set(data.probs[i].class,
-								data.probs[i].value);
+					const temData:Array<any> = Array.from(data.probs);
+
+
+					temData.sort((a:any, b:any) => b.value - a.value);
+					console.log(data.probs, temData);
+					for (let i = 0; i < temData.length; i++) {
+						modelProbs.set(temData[i].class, new Map());
+						if (temData[i].class === "shoes" || temData[i].class === "acc" || temData[i].class === "bag") {
+							modelProbs.get(temData[i].class).set(temData[i].class,
+								temData[i].value);
 						} else {
-							for (let j = 0; j < data.probs[i].subcate.length; j++) {
-								modelProbs.get(data.probs[i].class).set(data.probs[i].subcate[j].class,
-									data.probs[i].subcate[j].value);
+							for (let j = 0; j < temData[i].subcate.length; j++) {
+								modelProbs.get(temData[i].class).set(temData[i].subcate[j].class,
+									temData[i].subcate[j].value);
 							}
 						}
 
 
-						if (data.probs[i].class === "gender") {
-							modelResultTag.set("gender", data.probs[i].subcate[0].class);
-						} else if (data.probs[i].class === "color") {
-							modelResultTag.set("color", data.probs[i].subcate[0].class);
+						if (temData[i].class === "gender") {
+							modelResultTag.set("gender", temData[i].subcate[0].class);
+						} else if (temData[i].class === "color") {
+							modelResultTag.set("color", temData[i].subcate[0].class);
 						} else if (!modelResultTag.has("main")) {
-							modelResultTag.set("main", data.probs[i].class);
-							modelResultTag.set("sub", data.probs[i].subcate[0].class === null ? "" : data.probs[i].subcate[0].class);
+							modelResultTag.set("main", temData[i].class);
+							modelResultTag.set("sub", temData[i].subcate.length === 0 ? temData[i].class : temData[i].subcate[0].class);
 						}
 					}
 					/* 콘솔에 표시 */
