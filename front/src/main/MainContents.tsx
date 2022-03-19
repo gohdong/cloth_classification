@@ -125,12 +125,13 @@ export default function MainContents() {
 
                             return temp;
 						});
-						setCurrentBigCategory(images.get(currentItemID)?.usersTag.get("main") ?? "");
-						setCurrentSmallCategory(images.get(currentItemID)?.usersTag.get("sub") ?? "");
-						setCurrentGender(images.get(currentItemID)?.usersTag.get("gender") ?? "");
-						setCurrentColor(images.get(currentItemID)?.usersTag.get("color") ?? "");
 					});
 			}
+
+			setCurrentBigCategory(images.get(currentItemID)?.usersTag.get("main") ?? "");
+			setCurrentSmallCategory(images.get(currentItemID)?.usersTag.get("sub") ?? "");
+			setCurrentGender(images.get(currentItemID)?.usersTag.get("gender") ?? "");
+			setCurrentColor(images.get(currentItemID)?.usersTag.get("color") ?? "");
 		}
 	};
 
