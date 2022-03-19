@@ -21,60 +21,19 @@ export function onDropHandler(images: Map<string, Image>,
 
 			const tempMap = new Map<string, Image>();
 
-			const modelResultTag = new Map();
-			const modelProbs = new Map();
-			const formData = new FormData();
+			tempMap.set(fileID, {
+				id: fileID,
+				file: item,
+				edited: false,
+				viewed: false,
+				usersTag: new Map(),
+				modelResultTag: new Map(),
+				modelProbs: new Map(),
+			});
 
-			formData.append("img", item);
-			fetch("http://localhost:4000/check", {
-				method: "POST",
-				body: formData,
-			})
-				.then(response => response.json())
-				.then(data => {
-					const temData:Array<any> = Array.from(data.probs);
-
-
-					temData.sort((a:any, b:any) => b.value - a.value);
-					console.log(data.probs, temData);
-					for (let i = 0; i < temData.length; i++) {
-						modelProbs.set(temData[i].class, new Map());
-						if (temData[i].class === "shoes" || temData[i].class === "acc" || temData[i].class === "bag") {
-							modelProbs.get(temData[i].class).set(temData[i].class,
-								temData[i].value);
-						} else {
-							for (let j = 0; j < temData[i].subcate.length; j++) {
-								modelProbs.get(temData[i].class).set(temData[i].subcate[j].class,
-									temData[i].subcate[j].value);
-							}
-						}
-
-
-						if (temData[i].class === "gender") {
-							modelResultTag.set("gender", temData[i].subcate[0].class);
-						} else if (temData[i].class === "color") {
-							modelResultTag.set("color", temData[i].subcate[0].class);
-						} else if (!modelResultTag.has("main")) {
-							modelResultTag.set("main", temData[i].class);
-							modelResultTag.set("sub", temData[i].subcate.length === 0 ? temData[i].class : temData[i].subcate[0].class);
-						}
-					}
-					/* 콘솔에 표시 */
-				})
-				.then(() => {
-					tempMap.set(fileID, {
-						id: fileID,
-						file: item,
-						edited: false,
-						viewed: false,
-						usersTag: new Map(modelResultTag),
-						modelResultTag,
-						modelProbs,
-					});
-					setImages((prev: Map<string, Image>) => new Map<string, Image>(
-						[...prev, ...tempMap]),
-					);
-				});
+			setImages((prev: Map<string, Image>) => new Map<string, Image>(
+				[...prev, ...tempMap]),
+			);
 		}
 	}
 }
@@ -107,8 +66,8 @@ export default function MainContents() {
 			setImages(currVal => {
 				const temp = new Map(currVal);
 
-				temp.get(currentItemID)!.edited = true;
-				return temp;
+                temp.get(currentItemID)!.edited = true;
+                return temp;
 			});
 		}
 	};
@@ -116,17 +75,62 @@ export default function MainContents() {
 	const getCategory = async () => {
 		if (images.get(currentItemID)) {
 			if (!images.get(currentItemID)!.viewed) {
-				setImages(currVal => {
-					const temp = new Map(currVal);
+				const modelResultTag = new Map();
+				const modelProbs = new Map();
+				const formData = new FormData();
 
-				temp.get(currentItemID)!.viewed = true;
-				return temp;
-				});
+				formData.append("img", images.get(currentItemID)!.file);
+				await fetch("http://localhost:4000/check", {
+					method: "POST",
+					body: formData,
+				})
+					.then(response => response.json())
+					.then(data => {
+						const temData: Array<any> = Array.from(data.probs);
+
+						temData.sort((a: any, b: any) => b.value - a.value);
+						// console.log(temData);
+						for (let i = 0; i < temData.length; i++) {
+							modelProbs.set(temData[i].class, new Map());
+							if (temData[i].class === "shoes" || temData[i].class === "acc" || temData[i].class === "bag") {
+								modelProbs.get(temData[i].class).set(temData[i].class,
+									temData[i].value);
+							} else {
+								for (let j = 0; j < temData[i].subcate.length; j++) {
+									modelProbs.get(temData[i].class).set(temData[i].subcate[j].class,
+										temData[i].subcate[j].value);
+								}
+							}
+
+
+							if (temData[i].class === "gender") {
+								modelResultTag.set("gender", temData[i].subcate[0].class);
+							} else if (temData[i].class === "color") {
+								modelResultTag.set("color", temData[i].subcate[0].class);
+							} else if (!modelResultTag.has("main")) {
+								modelResultTag.set("main", temData[i].class);
+								modelResultTag.set("sub", temData[i].subcate.length === 0 ? temData[i].class : temData[i].subcate[0].class);
+							}
+						}
+						/* 콘솔에 표시 */
+					})
+					.then(() => {
+						setImages(currVal => {
+							const temp = new Map(currVal);
+
+                            temp.get(currentItemID)!.viewed = true;
+                            temp.get(currentItemID)!.usersTag = new Map(modelResultTag);
+                            temp.get(currentItemID)!.modelProbs = modelProbs;
+                            temp.get(currentItemID)!.modelResultTag = modelResultTag;
+
+                            return temp;
+						});
+						setCurrentBigCategory(images.get(currentItemID)?.usersTag.get("main") ?? "");
+						setCurrentSmallCategory(images.get(currentItemID)?.usersTag.get("sub") ?? "");
+						setCurrentGender(images.get(currentItemID)?.usersTag.get("gender") ?? "");
+						setCurrentColor(images.get(currentItemID)?.usersTag.get("color") ?? "");
+					});
 			}
-			setCurrentBigCategory(images.get(currentItemID)?.usersTag.get("main") ?? "");
-			setCurrentSmallCategory(images.get(currentItemID)?.usersTag.get("sub") ?? "");
-			setCurrentGender(images.get(currentItemID)?.usersTag.get("gender") ?? "");
-			setCurrentColor(images.get(currentItemID)?.usersTag.get("color") ?? "");
 		}
 	};
 
@@ -186,7 +190,7 @@ export default function MainContents() {
 			if (currentColor === "white") {
 				return "#6f90f8";
 			}
-			return 	colorCode.get(value);
+			return colorCode.get(value);
 		}
 		return "white";
 	}
