@@ -98,25 +98,31 @@ export default function MainContents() {
 		onDrop,
 	});
 	const setImageEdited = () => {
-		setImages(currVal => {
-			const temp = new Map(currVal);
+		if (!images.get(currentItemID)!.edited) {
+			setImages(currVal => {
+				const temp = new Map(currVal);
 
-			temp.get(currentItemID)!.edited = true;
-			return temp;
-		});
+				temp.get(currentItemID)!.edited = true;
+				return temp;
+			});
+		}
 	};
 
 	const getCategory = async () => {
-		setImages(currVal => {
-			const temp = new Map(currVal);
+		if (images.get(currentItemID)) {
+			if (!images.get(currentItemID)!.viewed) {
+				setImages(currVal => {
+					const temp = new Map(currVal);
 
-			temp.get(currentItemID)!.viewed = true;
-			return temp;
-		});
-		setCurrentBigCategory(images.get(currentItemID)?.usersTag.get("main") ?? "");
-		setCurrentSmallCategory(images.get(currentItemID)?.usersTag.get("sub") ?? "");
-		setCurrentGender(images.get(currentItemID)?.usersTag.get("gender") ?? "");
-		setCurrentColor(images.get(currentItemID)?.usersTag.get("color") ?? "");
+				temp.get(currentItemID)!.viewed = true;
+				return temp;
+				});
+			}
+			setCurrentBigCategory(images.get(currentItemID)?.usersTag.get("main") ?? "");
+			setCurrentSmallCategory(images.get(currentItemID)?.usersTag.get("sub") ?? "");
+			setCurrentGender(images.get(currentItemID)?.usersTag.get("gender") ?? "");
+			setCurrentColor(images.get(currentItemID)?.usersTag.get("color") ?? "");
+		}
 	};
 
 	// eslint-disable-next-line no-unused-vars
@@ -154,13 +160,10 @@ export default function MainContents() {
 		images.get(currentItemID)?.usersTag.set("color", value);
 	};
 
-	useEffect(() => {
-		getCategory();
-	});
 
 	useEffect(() => {
 		getCategory();
-	}, [currentItemID]);
+	}, [currentItemID, images]);
 
 
 	function getColorButtonColor(value: string) {
