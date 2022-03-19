@@ -1,13 +1,24 @@
 import {useRecoilValue} from "recoil";
-import {imagesSizeState} from "../recoil/imageState";
+import {editedImagesCountState, imagesSizeState, viewedImagesCountState} from "../recoil/imageState";
 import "./BottomStatusBar.scss";
+import CheckIcon from "../icons/CheckIcon";
+import EditIcon from "../icons/EditIcon";
 
 export default function BottomStatusBar() {
-	const test = useRecoilValue(imagesSizeState);
+	const totalImagesCount = useRecoilValue(imagesSizeState);
+	const viewedImagesCount = useRecoilValue(viewedImagesCountState);
+	const editedImagesCount = useRecoilValue(editedImagesCountState);
 
 	return (
 		<div id="bottom-status">
-			<p>{test} items here</p>
+			<div>
+				<CheckIcon/>
+				<p>{viewedImagesCount} / {totalImagesCount} viewed</p>
+			</div>
+			<div>
+				<EditIcon/>
+				<p>{editedImagesCount} / {totalImagesCount} edited</p>
+			</div>
 		</div>
 	);
 }

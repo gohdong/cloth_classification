@@ -61,6 +61,7 @@ export function onDropHandler(images: Map<string, Image>,
 						id: fileID,
 						file: item,
 						edited: false,
+						viewed: false,
 						usersTag: new Map(modelResultTag),
 						modelResultTag,
 						modelProbs,
@@ -96,8 +97,22 @@ export default function MainContents() {
 		noClick: imagesCount > 0,
 		onDrop,
 	});
+	const setImageEdited = () => {
+		setImages(currVal => {
+			const temp = new Map(currVal);
+
+			temp.get(currentItemID)!.edited = true;
+			return temp;
+		});
+	};
 
 	const getCategory = async () => {
+		setImages(currVal => {
+			const temp = new Map(currVal);
+
+			temp.get(currentItemID)!.viewed = true;
+			return temp;
+		});
 		setCurrentBigCategory(images.get(currentItemID)?.usersTag.get("main") ?? "");
 		setCurrentSmallCategory(images.get(currentItemID)?.usersTag.get("sub") ?? "");
 		setCurrentGender(images.get(currentItemID)?.usersTag.get("gender") ?? "");
@@ -108,9 +123,9 @@ export default function MainContents() {
 	const onClickMainCategory = (value: string,
 		event: React.MouseEvent<HTMLDivElement>) => {
 		event.preventDefault();
-		console.log(value);
 		setCurrentBigCategory(value ?? "");
 		setCurrentSmallCategory("");
+		setImageEdited();
 		images.get(currentItemID)?.usersTag.set("main", value ?? "");
 		images.get(currentItemID)?.usersTag.set("sub", "");
 	};
@@ -119,6 +134,7 @@ export default function MainContents() {
 		event: React.MouseEvent<HTMLDivElement>) => {
 		event.preventDefault();
 		setCurrentSmallCategory(value ?? "");
+		setImageEdited();
 		images.get(currentItemID)?.usersTag.set("sub", value);
 	};
 	// eslint-disable-next-line no-unused-vars
@@ -126,6 +142,7 @@ export default function MainContents() {
 		event: React.MouseEvent<HTMLDivElement>) => {
 		event.preventDefault();
 		setCurrentGender(value ?? "");
+		setImageEdited();
 		images.get(currentItemID)?.usersTag.set("gender", value);
 	};
 	// eslint-disable-next-line no-unused-vars
@@ -133,13 +150,17 @@ export default function MainContents() {
 		event: React.MouseEvent<HTMLDivElement>) => {
 		event.preventDefault();
 		setCurrentColor(value ?? "");
+		setImageEdited();
 		images.get(currentItemID)?.usersTag.set("color", value);
 	};
 
+	useEffect(() => {
+		getCategory();
+	});
 
 	useEffect(() => {
 		getCategory();
-	}, [currentItemID, images]);
+	}, [currentItemID]);
 
 
 	function getColorButtonColor(value: string) {
