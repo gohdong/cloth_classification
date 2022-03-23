@@ -5,6 +5,8 @@ import {Image, imagesSizeState, imageState, selectedItemID} from "../recoil/imag
 import "./MainContents.scss";
 // eslint-disable-next-line no-unused-vars
 import {bigCategory, categoryToKR, color, colorCode, colorToKR, gender, smallCategory} from "./category";
+import SkeletonMain from "../skeletons/SkeletonMain";
+import {loadingSate} from "../recoil/loadingState";
 
 const hash = require("object-hash");
 
@@ -43,13 +45,10 @@ export default function MainContents() {
 	const [images, setImages] = useRecoilState(imageState);
 	const imagesCount = useRecoilValue(imagesSizeState);
 	const [currentItemID, setCurrentItemID] = useRecoilState(selectedItemID);
-	// eslint-disable-next-line no-unused-vars
+	const [isLoading, setIsLoading] = useRecoilState(loadingSate);
 	const [currentBigCategory, setCurrentBigCategory] = useState<string>("");
-	// eslint-disable-next-line no-unused-vars
 	const [currentSmallCategory, setCurrentSmallCategory] = useState<string>("");
-	// eslint-disable-next-line no-unused-vars
 	const [currentGender, setCurrentGender] = useState<string>("");
-	// eslint-disable-next-line no-unused-vars
 	const [currentColor, setCurrentColor] = useState<string>("");
 
 	const onDrop = useCallback(acceptedFiles => {
@@ -75,6 +74,7 @@ export default function MainContents() {
 	const getCategory = async () => {
 		if (images.get(currentItemID)) {
 			if (!images.get(currentItemID)!.viewed) {
+				setIsLoading(true);
 				const modelResultTag = new Map();
 				const modelProbs = new Map();
 				const formData = new FormData();
@@ -132,6 +132,7 @@ export default function MainContents() {
 			setCurrentSmallCategory(images.get(currentItemID)?.usersTag.get("sub") ?? "");
 			setCurrentGender(images.get(currentItemID)?.usersTag.get("gender") ?? "");
 			setCurrentColor(images.get(currentItemID)?.usersTag.get("color") ?? "");
+			setIsLoading(false);
 		}
 	};
 
@@ -206,78 +207,83 @@ export default function MainContents() {
 		return "solid 1px #6f90f8";
 	}
 
+	function getBody() {
+		if (isLoading) {
+			return <SkeletonMain/>;
+		}
+		return imagesCount > 0 && images.has(currentItemID) ?
+			<div id="main-contents-wrap">
+				<div className="image-wrap">
+					<img src={
+						URL.createObjectURL(images.get(currentItemID)!.file)
+					} alt=""/>
+				</div>
+				<div id="main-bottom">
+					<div id="category-area">
+						<div id="main-bottom-left">
+							<h3>대분류</h3>
+							<div className="buttons-wrap">
+								{bigCategory.map((value, index) =>
+									<div key={value}
+										className={`category-buttons ${currentBigCategory === value ? "selected" : ""}`}
+										onClick={e => onClickMainCategory(value, e)}>{categoryToKR.get(value)}</div>)}
+							</div>
+							<h3>소분류</h3>
+							<div className="buttons-wrap">
+								{smallCategory.get(currentBigCategory)?.map((value, index) =>
+									<div key={value}
+										className={`category-buttons ${currentSmallCategory === value ? "selected" : ""}`}
+										onClick={e => onClickSubCategory(value, e)}>{categoryToKR.get(value)}</div>)}
+							</div>
+						</div>
+						<div id="main-bottom-right">
+							<h3>성별</h3>
+							<div className="buttons-wrap">
+								{gender.map((value, index) =>
+									<div key={value}
+										className={`category-buttons ${currentGender === value ? "selected" : ""}`}
+										onClick={e => onClickGenderCategory(value, e)}>{categoryToKR.get(value)}</div>)}
+							</div>
+							<h3>색상</h3>
+							<div className="buttons-wrap">
+								{color.map((value, index) =>
+									<div
+										className={`category-buttons ${currentColor === value ? "selected" : ""}`}
+										onClick={e => onClickColorCategory(value, e)}
+										key={value}
+										style={{
+											// color: value === "white" || value === "yellow" || value === "beige" || value === "green" ?
+											// 	"black" :
+											// 	"white",
+											color: getColorButtonColor(value),
+											backgroundColor: getColorButtonBackgroundColor(value),
+											border: getColorButtonBorder(value),
+										}}>
+										{colorToKR.get(value)}
+									</div>)}
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div> :
+			<>
+				<div id="placeholder">
+					<div/>
+				</div>
+				{
+					isDragActive ?
+						<p>파일을 놓아주세요!</p> :
+						<p>시작하려면 파일을 끌어오거나 선택해주세요.</p>
+				}
+			</>;
+	}
+
 	return (
 		<div id="main-contents" className={isDragActive ? "drag-on" : ""} {...getRootProps()}>
 			<input {...getInputProps()} />
 			<>
-				{
-					imagesCount > 0 && images.has(currentItemID) ?
-						<div id="main-contents-wrap">
-							<div className="image-wrap">
-								<img src={
-									URL.createObjectURL(images.get(currentItemID)!.file)
-								} alt=""/>
-							</div>
-							<div id="main-bottom">
-								<div id="category-area">
-									<div id="main-bottom-left">
-										<h3>대분류</h3>
-										<div className="buttons-wrap">
-											{bigCategory.map((value, index) =>
-												<div key={value}
-													className={`category-buttons ${currentBigCategory === value ? "selected" : ""}`}
-													onClick={e => onClickMainCategory(value, e)}>{categoryToKR.get(value)}</div>)}
-										</div>
-										<h3>소분류</h3>
-										<div className="buttons-wrap">
-											{smallCategory.get(currentBigCategory)?.map((value, index) =>
-												<div key={value}
-													className={`category-buttons ${currentSmallCategory === value ? "selected" : ""}`}
-													onClick={e => onClickSubCategory(value, e)}>{categoryToKR.get(value)}</div>)}
-										</div>
-									</div>
-									<div id="main-bottom-right">
-										<h3>성별</h3>
-										<div className="buttons-wrap">
-											{gender.map((value, index) =>
-												<div key={value}
-													className={`category-buttons ${currentGender === value ? "selected" : ""}`}
-													onClick={e => onClickGenderCategory(value, e)}>{categoryToKR.get(value)}</div>)}
-										</div>
-										<h3>색상</h3>
-										<div className="buttons-wrap">
-											{color.map((value, index) =>
-												<div
-													className={`category-buttons ${currentColor === value ? "selected" : ""}`}
-													onClick={e => onClickColorCategory(value, e)}
-													key={value}
-													style={{
-														// color: value === "white" || value === "yellow" || value === "beige" || value === "green" ?
-														// 	"black" :
-														// 	"white",
-														color: getColorButtonColor(value),
-														backgroundColor: getColorButtonBackgroundColor(value),
-														border: getColorButtonBorder(value),
-													}}>
-													{colorToKR.get(value)}
-												</div>)}
-										</div>
-									</div>
-
-								</div>
-							</div>
-						</div> :
-						<>
-							<div id="placeholder">
-								<div/>
-							</div>
-							{
-								isDragActive ?
-									<p>파일을 놓아주세요!</p> :
-									<p>시작하려면 파일을 끌어오거나 선택해주세요.</p>
-							}
-						</>
-				}
+				{getBody()}
 			</>
 		</div>
 	);

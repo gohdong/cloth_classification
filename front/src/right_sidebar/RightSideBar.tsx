@@ -3,6 +3,7 @@ import "./RightSideBar.scss";
 import {sidebarState} from "../recoil/sidebarState";
 import {imageState, selectedItemID} from "../recoil/imageState";
 import {categoryToKR, colorToKR} from "../main/category";
+import {loadingSate} from "../recoil/loadingState";
 
 
 export function ConvertValue({data}: { data: Map<String, Map<String, Number>> | undefined }) {
@@ -40,11 +41,17 @@ export function ConvertValue({data}: { data: Map<String, Map<String, Number>> | 
 export default function RightSideBar() {
 	const isSideBarOpen = useRecoilValue(sidebarState);
 	const currentItemID = useRecoilValue(selectedItemID);
+	const isLoading = useRecoilValue(loadingSate);
 	const images = useRecoilValue(imageState);
+
 
 	return (
 		<div id="right-sidebar" className={isSideBarOpen ? "right-sidebar-on" : "right-sidebar-off"}>
-			<ConvertValue data={images.get(currentItemID)?.modelProbs}/>
+			{
+				isLoading ?
+					<div/> :
+					<ConvertValue data={images.get(currentItemID)?.modelProbs}/>
+			}
 		</div>
 	);
 }
