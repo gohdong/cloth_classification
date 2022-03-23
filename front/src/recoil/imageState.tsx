@@ -18,7 +18,7 @@ export const imageState = atom<Map<string, Image>>({
 });
 
 export const imagesSizeState = selector<number>({
-	key: "imagesCount", // unique ID (with respect to other atoms/selectors)
+	key: "imagesCount",
 	get: ({get}) => {
 		const images = get(imageState);
 
@@ -27,7 +27,7 @@ export const imagesSizeState = selector<number>({
 });
 
 export const viewedImagesCountState = selector<number>({
-	key: "viewedImagesCount", // unique ID (with respect to other atoms/selectors)
+	key: "viewedImagesCount",
 	get: ({get}) => {
 		let result = 0;
 		const images = get(imageState);
@@ -41,7 +41,7 @@ export const viewedImagesCountState = selector<number>({
 });
 
 export const editedImagesCountState = selector<number>({
-	key: "editedImagesCount", // unique ID (with respect to other atoms/selectors)
+	key: "editedImagesCount",
 	get: ({get}) => {
 		let result = 0;
 		const images = get(imageState);

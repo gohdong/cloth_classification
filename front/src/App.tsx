@@ -1,5 +1,4 @@
 import React from "react";
-// import {atom} from "recoil";
 import {useRecoilState} from "recoil";
 import "./App.scss";
 import AppBar from "./appbar/AppBar";

@@ -3,7 +3,6 @@ import React, {useCallback, useEffect, useState} from "react";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {Image, imagesSizeState, imageState, selectedItemID} from "../recoil/imageState";
 import "./MainContents.scss";
-// eslint-disable-next-line no-unused-vars
 import {bigCategory, categoryToKR, color, colorCode, colorToKR, gender, smallCategory} from "./category";
 import SkeletonMain from "../skeletons/SkeletonMain";
 import {loadingSate} from "../recoil/loadingState";
@@ -89,7 +88,6 @@ export default function MainContents() {
 						const temData: Array<any> = Array.from(data.probs);
 
 						temData.sort((a: any, b: any) => b.value - a.value);
-						// console.log(temData);
 						for (let i = 0; i < temData.length; i++) {
 							modelProbs.set(temData[i].class, new Map());
 							if (temData[i].class === "shoes" || temData[i].class === "acc" || temData[i].class === "bag") {
@@ -136,7 +134,6 @@ export default function MainContents() {
 		}
 	};
 
-	// eslint-disable-next-line no-unused-vars
 	const onClickMainCategory = (value: string,
 		event: React.MouseEvent<HTMLDivElement>) => {
 		event.preventDefault();
@@ -146,7 +143,6 @@ export default function MainContents() {
 		images.get(currentItemID)?.usersTag.set("main", value ?? "");
 		images.get(currentItemID)?.usersTag.set("sub", "");
 	};
-	// eslint-disable-next-line no-unused-vars
 	const onClickSubCategory = (value: string,
 		event: React.MouseEvent<HTMLDivElement>) => {
 		event.preventDefault();
@@ -154,7 +150,6 @@ export default function MainContents() {
 		setImageEdited();
 		images.get(currentItemID)?.usersTag.set("sub", value);
 	};
-	// eslint-disable-next-line no-unused-vars
 	const onClickGenderCategory = (value: string,
 		event: React.MouseEvent<HTMLDivElement>) => {
 		event.preventDefault();
@@ -162,7 +157,6 @@ export default function MainContents() {
 		setImageEdited();
 		images.get(currentItemID)?.usersTag.set("gender", value);
 	};
-	// eslint-disable-next-line no-unused-vars
 	const onClickColorCategory = (value: string,
 		event: React.MouseEvent<HTMLDivElement>) => {
 		event.preventDefault();
@@ -252,9 +246,6 @@ export default function MainContents() {
 										onClick={e => onClickColorCategory(value, e)}
 										key={value}
 										style={{
-											// color: value === "white" || value === "yellow" || value === "beige" || value === "green" ?
-											// 	"black" :
-											// 	"white",
 											color: getColorButtonColor(value),
 											backgroundColor: getColorButtonBackgroundColor(value),
 											border: getColorButtonBorder(value),
