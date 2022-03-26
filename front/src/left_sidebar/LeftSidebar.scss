@@ -68,3 +68,9 @@
   border-radius: 10px;
   font-weight: bold;
 }
+
+@media (max-width: 480px) {
+  #left-sidebar{
+    display: none;
+  }
+}

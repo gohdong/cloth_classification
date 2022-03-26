@@ -20,3 +20,9 @@
   fill: #808080;
   cursor: pointer;
 }
+
+@media (max-width: 480px) {
+  .sidebar-button{
+    display: none;
+  }
+}

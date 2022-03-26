@@ -53,7 +53,7 @@ function AppBar() {
 					<button onClick={onClickExport}>
 						<ExportIcon/>
 					</button>
-					<button onClick={onClickButton}>
+					<button className="sidebar-button" onClick={onClickButton}>
 						<ViewSideBar/>
 					</button>
 				</div>
