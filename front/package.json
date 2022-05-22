@@ -18,6 +18,7 @@
     "react-csv": "^2.2.2",
     "react-dom": "^17.0.2",
     "react-dropzone": "^12.0.4",
+    "react-html5-camera-photo": "^1.5.5",
     "react-scripts": "5.0.0",
     "recoil": "^0.6.1",
     "sass-loader": "^12.6.0",
@@ -48,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-html5-camera-photo": "^1.5.1",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
     "concurrently": "^7.0.0",

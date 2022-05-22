@@ -272,7 +272,7 @@ export default function MainContents() {
 
 	return (
 		<div id="main-contents" className={isDragActive ? "drag-on" : ""} {...getRootProps()}>
-			<input {...getInputProps()} />
+			<input type="file" accept="image/*" {...getInputProps()} />
 			<>
 				{getBody()}
 			</>
