@@ -1,9 +1,11 @@
 package woowang.clothesroute.upload;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import woowang.clothesroute.dto.UploadFile;
+import woowang.clothesroute.repository.FileRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,14 +14,22 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor
 public class FileStore {
 
     @Value("${file.dir}")
     private String fileDir;
 
+    @Value("${rembgFile.dir}")
+    private String rembgFileDir;
+
+    private final FileRepository fileRepository;
+
     public String getFullPath(String filename) {
         return fileDir + filename;
     }
+
+    public String getRemovedFullPath(String fileName){return rembgFileDir+fileName;}
 
     public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles)
             throws IOException {
@@ -38,7 +48,9 @@ public class FileStore {
         String originalFilename = multipartFile.getOriginalFilename();
         String storeFileName = createStoreFileName(originalFilename);
         multipartFile.transferTo(new File(getFullPath(storeFileName)));
-        return new UploadFile(originalFilename, storeFileName);
+        UploadFile uploadFile = new UploadFile(originalFilename, storeFileName);
+        fileRepository.save(uploadFile);
+        return uploadFile;
     }
 
     private String createStoreFileName(String originalFilename) {

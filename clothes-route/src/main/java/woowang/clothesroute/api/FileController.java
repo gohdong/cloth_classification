@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -20,33 +19,40 @@ import woowang.clothesroute.repository.FileRepository;
 import woowang.clothesroute.upload.FileStore;
 
 import java.io.IOException;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
 public class FileController {
 
-    @Value("${request.url}")
-    private String requestUrl;
+    @Value("${requestNode.url}")
+    private String requestNodeUrl;
+
+    @Value("${requestFlask.url}")
+    private String requestFlaskUrl;
+
+    @Value("${rembgFile.dir}")
+    private String rembgFileDir;
 
     private final FileStore fileStore;
-    private final FileRepository fileRepository;
 
     @PostMapping("/check")
     public ResponseEntity<String> getImage(@RequestParam("img") MultipartFile file) throws IOException {
         UploadFile uploadFile = fileStore.storeFile(file);
-
-        fileRepository.save(uploadFile);
-
         log.info("file = {}",uploadFile);
 
-//        TODO : 배경 삭제된 작업 처리
+//        TODO : 배경 삭제 작업 처리
+        byte[] imageBytes = sendFlaskRequest(uploadFile.getUploadName());
 
-        ResponseEntity<String> exchange = sendRequest(uploadFile);
+        // removed 폴더에 누끼딴 사진 저장
+        Files.write(Paths.get(rembgFileDir+uploadFile.getStoreFileName()), imageBytes);
+
+        ResponseEntity<String> nodeResponse = sendNodeRequest(uploadFile.getStoreFileName());
 //        log.info("exchange = {}",exchange);
 
-        return exchange;
+        return nodeResponse;
 
     }
 
@@ -56,9 +62,22 @@ public class FileController {
 //
 //    }
 
-    private ResponseEntity<String> sendRequest(UploadFile uploadFile) {
+    private byte[] sendFlaskRequest(String uploadFileName){
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("img", uploadFile.getStoreFileName());
+
+        RestTemplate rt = new RestTemplate();
+        ResponseEntity<byte[]> exchange = rt.getForEntity(
+//                requestFlaskUrl+uploadFileName
+                //TODO : Flask 서버 5000 가동
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Gull_portrait_ca_usa.jpg/1280px-Gull_portrait_ca_usa.jpg",
+                byte[].class);
+        return exchange.getBody();
+//        return exchange;
+    }
+
+    private ResponseEntity<String> sendNodeRequest(String storeFileName) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("img", storeFileName);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type","application/json");
@@ -66,7 +85,7 @@ public class FileController {
 
         RestTemplate rt = new RestTemplate();
         ResponseEntity<String> exchange = rt.exchange(
-                requestUrl+"/check",
+                requestNodeUrl,
                 HttpMethod.POST,
                 entity,
                 String.class

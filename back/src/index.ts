@@ -1,6 +1,8 @@
 import express from "express";
 import {excuteModel} from "../run_tf_model/test"
 
+
+const path = '/Users/woowang/Desktop/cloth_classification';
 // const cors = require('cors');
 // const corsOptions = {
 //   origin: "http://localhost:3000",
@@ -37,7 +39,7 @@ app.post('/check', async (req, res) => {  //유저가 사진을 보내면 판단
   res.header("Access-Control-Allow-Origin", "*");
   console.log(req.body);
   // TODO -> uplaods를 removed로 바꿔야함
-  let imagePath = '/Users/woowang/Desktop/cloth_classification-main/uploads/'+req.body['img'];
+  let imagePath = path+'/uploads/'+req.body['img'];
 
   var tmp = await excuteModel(imagePath);
   console.log(tmp);
