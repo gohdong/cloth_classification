@@ -1,24 +1,24 @@
 ## h2 데이터 베이스 다운로드 https://www.h2database.com/html/download.html
 version : 2.1.212
 h2.sh 실행 (5050 포트에 데이터베이스 올림)
-최초로 test.mv.db 생성을 위해 jdbc:h2:~/test 로 접속
-그 후 jdbc:h2:tcp://localhost/~/test 로 접속
+최초로 \~/test.mv.db 생성을 위해 jdbc:h2:\~/test 로 접속
+그 후 jdbc:h2:tcp://localhost/\~/test 로 접속
 
 ## 서버 실행 순서
-1. h2 서버실행 (5050) -> {h2 Dir}/bi에서 ./h2.sh
+1. h2 서버실행 (5050) -> {h2 Dir}/bin/h2.sh
 2. spring 서버 실행 (8080) 
 3. flask 서버 실행 (5000) -> rembg s
 4. node 서버 실행 (4000) -> back dir 에서 npm start
 5. react 서버 실행 (3000) -> front dir 에서 npm start
 
 ## 변경 사항
-기존 : react -> nodejs
-변경 : react -> spring -> flask -> nodejs
+- 기존 : react -> nodejs
+- 변경 : react -> spring -> flask -> nodejs
 
-react   : client
-spring  : router
-flask   : background removal model
-nodejs  : category classify model
+- react   : client
+- spring  : router
+- flask   : background removal model
+- nodejs  : category classify model
 
 
 1. client 가 사진 request
