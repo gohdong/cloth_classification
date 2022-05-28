@@ -79,7 +79,7 @@ export default function MainContents() {
 				const formData = new FormData();
 
 				formData.append("img", images.get(currentItemID)!.file);
-				await fetch("http://localhost:4000/check", {
+				await fetch("http://localhost:8080/check", {
 					method: "POST",
 					body: formData,
 				})
