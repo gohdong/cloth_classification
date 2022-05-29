@@ -19,6 +19,12 @@ repositories {
 }
 
 dependencies {
+//	img-scalar
+	implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
+
+	// https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
+	implementation 'com.drewnoakes:metadata-extractor:2.6.2'
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'

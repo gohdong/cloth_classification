@@ -1,8 +1,11 @@
 package woowang.clothesroute.api;
 
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.MetadataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -39,17 +42,18 @@ public class FileController {
     private final FileStore fileStore;
 
     @PostMapping("/check")
-    public ResponseEntity<String> getImage(@RequestParam("img") MultipartFile file) throws IOException {
+    public ResponseEntity<String> getImage(@RequestParam("img") MultipartFile file) throws IOException, ImageProcessingException, MetadataException {
         UploadFile uploadFile = fileStore.storeFile(file);
         log.info("file = {}",uploadFile);
 
 //        TODO : 배경 삭제 작업 처리
-        byte[] imageBytes = sendFlaskRequest(uploadFile.getUploadName());
+        byte[] imageBytes = sendFlaskRequest(uploadFile.getStoreFileName());
 
         // removed 폴더에 누끼딴 사진 저장
         Files.write(Paths.get(rembgFileDir+uploadFile.getStoreFileName()), imageBytes);
 
         ResponseEntity<String> nodeResponse = sendNodeRequest(uploadFile.getStoreFileName());
+
 //        log.info("exchange = {}",exchange);
 
         return nodeResponse;
@@ -63,13 +67,11 @@ public class FileController {
 //    }
 
     private byte[] sendFlaskRequest(String uploadFileName){
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-
         RestTemplate rt = new RestTemplate();
         ResponseEntity<byte[]> exchange = rt.getForEntity(
-//                requestFlaskUrl+uploadFileName
+                requestFlaskUrl+uploadFileName,
                 //TODO : Flask 서버 5000 가동
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Gull_portrait_ca_usa.jpg/1280px-Gull_portrait_ca_usa.jpg",
+//                "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Gull_portrait_ca_usa.jpg/1280px-Gull_portrait_ca_usa.jpg",
                 byte[].class);
         return exchange.getBody();
 //        return exchange;
