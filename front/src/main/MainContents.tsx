@@ -71,7 +71,7 @@ export default function MainContents() {
 	};
 
 	const getCategory = async () => {
-		if (images.get(currentItemID)) {
+		if (!isLoading && images.get(currentItemID)) {
 			if (!images.get(currentItemID)!.viewed) {
 				setIsLoading(true);
 				const modelResultTag = new Map();
