@@ -6,6 +6,7 @@ import {excuteModel} from "../run_tf_model/test"
 const util = require('util');
 // const exec = require('child_process');
 const exec = util.promisify(require('child_process').exec);
+const jimp = require('jimp');
 
 const cors = require('cors');
 const corsOptions = {
@@ -53,6 +54,7 @@ app.post('/check', check.single('img'), async (req, res) => {  //유저가 사�
 
   let file = req.file;
   let afterPath = await removeBackground(file?.path);
+  console.log(afterPath);
   var tmp = await excuteModel(afterPath);
 
   console.log(tmp);
@@ -61,6 +63,9 @@ app.post('/check', check.single('img'), async (req, res) => {  //유저가 사�
 
 async function removeBackground(path:string) {
   let outputPath = `afterRembg/${path.split("/")[1].split(".")[0]}.png`;
+  jimp.read(path).then(img =>{
+    return img.resize(512,512).write(path);
+  });
 
   try {
     const { stdout, stderr } = await exec(`python3 -m rembg.cmd.cli ${path} -o ${outputPath}`);
